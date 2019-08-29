@@ -14,6 +14,6 @@ Crear una base de datos que reciva una la informacion biometrica de una persona 
 - El sistema solo acpeta datos biometricos
 - El sistema solo regresa datos tipo json
 - El sistema mandara una respuesta en menos de 5 segundos
-- La base de datos debe tener la capacidad de guardar la mayor cantidad de perfiles posibles
+- La base de datos debe tener la capacidad de guardad 10,000 perfiles
 ## Instalar
 ## Pruebas
