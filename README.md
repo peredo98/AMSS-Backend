@@ -3,7 +3,7 @@
 Crear una base de datos que reciva una la informacion biometrica de una persona y regrese su foto y su informacion. Asi como su nombre, matricula, edad, y una pequeña descripción.
 ## Prerequisites
 ### Requisitos Funcionales
-- Insertar nuevos miembros en la base de datos
+- Llenar la base de datos con nuevos perfiles
 - A cada miembro crearle una descripcion y perfil
 - El sistema podra editar o eliminar los perfiles 
 - El sistema recivira informacion biometrica y mandara el perfil que coincida con la informacion dada
