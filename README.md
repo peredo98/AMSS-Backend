@@ -4,8 +4,8 @@ Crear una base de datos que reciva una la informacion biometrica de una persona 
 ## Prerequisites
 ### Requisitos Funcionales
 - Llenar la base de datos con nuevos perfiles
-- A cada miembro crearle una descripcion y perfil
-- El sistema podra editar o eliminar los perfiles 
+- Cada perfil mostrara una matriz, nombre, matricula, edad y pequeña descripcion
+- El sistema podra agregar, editar o eliminar los perfiles 
 - El sistema recivira informacion biometrica y mandara el perfil que coincida con la informacion dada
 - El sistema avisara si la informacion biometrica dada no coincide con ningun perfil de la base de datos
 ### Requisitos No Funcionales
