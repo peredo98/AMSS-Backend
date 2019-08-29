@@ -1,6 +1,6 @@
 # AMSS-Backend
 ## Descripción de Proyecto
-Crear una base de datos que reciva una la informacion biometrica de una persona y regrese su foto y su informacion.
+Crear una base de datos que reciva una la informacion biometrica de una persona y regrese su foto y su informacion. Asi como su nombre, matricula, edad, y una pequeña descripción.
 ## Prerequisites
 ### Requisitos Funcionales
 - Insertar nuevos miembros en la base de datos
