@@ -12,7 +12,7 @@ Crear una base de datos que reciva una la informacion biometrica de una persona 
 - El sistema debe contar con manuales de usuario estructurados adecuadamente
 - La base de datos y API funcionan en MongoDB y C++
 - El sistema solo acpeta datos biometricos
-- El sistema solo regresa datos tipo string, int y png
+- El sistema solo regresa datos tipo json
 - El sistema mandara una respuesta en menos de 5 segundos
 - La base de datos debe tener la capacidad de guardar la mayor cantidad de perfiles posibles
 ## Instalar
