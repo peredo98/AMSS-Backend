@@ -11,7 +11,7 @@ Asi como nombre, matricula, edad y una pequeña descipción.
 - El sistema avisara si la informacion biometrica dada no coincide con ningun perfil de la base de datos
 ### Requisitos No Funcionales
 - El sistema debe contar con manuales de usuario estructurados adecuadamente
-- La base de datos y API funcionan en MongoDB y C
+- La base de datos y API funcionan en MongoDB y C++
 - El sistema solo acpeta datos biometricos
 - El sistema solo regresa datos tipo string, int y png
 - El sistema mandara una respuesta en menos de 5 segundos
