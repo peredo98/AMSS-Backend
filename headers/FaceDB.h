@@ -8,8 +8,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-#include "Person.h"
-
 using namespace std; 
 class FaceDB{
 
@@ -23,15 +21,15 @@ class FaceDB{
 
         }
 
-        void createPerson(string name, string lastName, string id){
+        void createPerson(string name, string lastName, string id, int age, string gender){
 
             auto collection = conn["testdb"]["testcollection"];
             
-            document << "name" << name << "lastName" << lastName << "studentId" << id;
+            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age  << "gender" << gender;
             collection.insert_one(document.view());
         }
 
-        void getPersonById(string id){
+        string getPersonById(string id){
             auto collection = conn["testdb"]["testcollection"];
 
             bsoncxx::builder::stream::document filter;
@@ -39,8 +37,12 @@ class FaceDB{
             bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
             collection.find_one(filter.view());
             if(maybe_result) {
-                std::cout << bsoncxx::to_json(*maybe_result) << "\n";
+
+                //std::cout << bsoncxx::to_json(*maybe_result) << "\n";
+
+                return bsoncxx::to_json(*maybe_result);
             }
+            return "";
         }
 
         void printDB(){

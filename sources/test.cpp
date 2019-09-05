@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include<string> 
+
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 
@@ -8,24 +10,12 @@
 
 #include "./../headers/FaceDB.h"
 
+using namespace std; 
 int main(int, char**) {
-    /*
-    mongocxx::instance inst{};
-    mongocxx::client conn{mongocxx::uri{}};
-
-    bsoncxx::builder::stream::document document{};
-
-    auto collection = conn["testdb"]["testcollection"];
-    document << "name" << "Emiliano";
-
-    collection.insert_one(document.view());
-    auto cursor = collection.find({});
-
-    for (auto&& doc : cursor) {
-        std::cout << bsoncxx::to_json(doc) << std::endl;
-    }*/
+    
     FaceDB db;
-    //db.createPerson("Victor", "Snachez", "A01422328");
-    db.getPersonById("A01422328");
+    //db.createPerson("Ernesto", "Rámirez", "A01019589", 23, "Male");
+    string str =  db.getPersonById("A01019589");
+    printf("%s", str.c_str());
     //db.printDB();
 }
