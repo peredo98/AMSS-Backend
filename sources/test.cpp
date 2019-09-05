@@ -6,8 +6,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-#include "stdio.h"
-#include "DB.h"
+#include "./../headers/FaceDB.h"
 
 int main(int, char**) {
     /*
@@ -25,7 +24,8 @@ int main(int, char**) {
     for (auto&& doc : cursor) {
         std::cout << bsoncxx::to_json(doc) << std::endl;
     }*/
-    DB* db = new DB();
-    db->createPerson("Emiliano", "Peredo", "A01422326");
-    db->printDB();
+    FaceDB db;
+    //db.createPerson("Victor", "Snachez", "A01422328");
+    db.getPersonById("A01422328");
+    //db.printDB();
 }
