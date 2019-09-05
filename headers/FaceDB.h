@@ -12,15 +12,17 @@ using namespace std;
 class FaceDB{
 
     public:
+
+        //init mongo
         mongocxx::instance inst{};
         mongocxx::client conn{mongocxx::uri{}};
-
         bsoncxx::builder::stream::document document{}; 
 
         FaceDB(){
 
         }
 
+        //to insert person in DB
         void createPerson(string name, string lastName, string id, int age, string gender){
 
             auto collection = conn["testdb"]["testcollection"];
@@ -29,6 +31,7 @@ class FaceDB{
             collection.insert_one(document.view());
         }
 
+        // to retrieve person from DB
         string getPersonById(string id){
             auto collection = conn["testdb"]["testcollection"];
 
@@ -45,6 +48,8 @@ class FaceDB{
             return "";
         }
 
+
+        //Print all documents in DB
         void printDB(){
             auto collection = conn["testdb"]["testcollection"];
             auto cursor = collection.find({});

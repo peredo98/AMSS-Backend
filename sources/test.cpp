@@ -14,8 +14,13 @@ using namespace std;
 int main(int, char**) {
     
     FaceDB db;
-    //db.createPerson("Ernesto", "Rámirez", "A01019589", 23, "Male");
+    // Crate Person createPerson(name, lastName, studentId, age, gender) eg:
+    db.createPerson("Ernesto", "Rámirez", "A01019589", 23, "Male");
+
+    //Get Person by StudentId getPersonById(studentId) eg:
     string str =  db.getPersonById("A01019589");
     printf("%s", str.c_str());
+
+    //PrintDB
     //db.printDB();
 }
