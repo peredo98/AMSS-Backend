@@ -15,10 +15,10 @@ int main(int, char**) {
     
     FaceDB db;
     // Crate Person createPerson(name, lastName, studentId, age, gender) eg:
-    db.createPerson("Ernesto", "Rámirez", "A01019589", 23, "Male");
+    //db.createPerson("Ruben", "Salazar", "A01234567", 21, "Male");
 
     //Get Person by StudentId getPersonById(studentId) eg:
-    string str =  db.getPersonById("A01019589");
+    string str =  db.getPersonById("A01234567");
     printf("%s", str.c_str());
 
     //PrintDB
