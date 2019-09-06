@@ -4,7 +4,6 @@
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
@@ -18,9 +17,12 @@ int main(int, char**) {
     //db.createPerson("Ruben", "Salazar", "A01234567", 21, "Male");
 
     //Get Person by StudentId getPersonById(studentId) eg:
-    string str =  db.getPersonById("A01234567");
-    printf("%s", str.c_str());
+    //string str =  db.getPersonById("A01234567");
+    //printf("%s", str.c_str());
+
+    //Update imageURL by studentId
+    //db.insertImage("A01234567", "/img/A01234567.png");
 
     //PrintDB
-    //db.printDB();
+    db.printDB();
 }
