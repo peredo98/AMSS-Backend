@@ -7,6 +7,10 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
 #include "./../headers/FaceDB.h"
 
 #include "./../include/rapidjson/document.h"
@@ -21,17 +25,28 @@ int main(int, char**) {
     // Crate Person createPerson(name, lastName, studentId, age, gender) eg:
     //db.createPerson("Ruben", "Salazar", "A01234567", 21, "Male");
 
+    /*
     //Get Person's name by StudentId getPersonById(studentId) eg:
     string json =  db.getPersonById("A01234567");
-    //printf("%s\n", json.c_str());
+    printf("%s\n", json.c_str());
+
+    //Retrieve name from retrived Person
     Document d;
     d.Parse(json.c_str());
     Value& val = d["name"];
     printf("%s\n", val.GetString());
+    */
 
-    //Update imageURL by studentId insetImage(studentId, imageURL)
-    //db.insertImage("A01234567", "/img/A01234567.png");
+    //Read image
+    Mat image;
+    image = imread( "./../img/sample.jpeg", 1 );
+
+    //Save image (the image will be saved with .png extension)
+    db.saveImage(image, "A01234567");
+
+    //Update imageURL by studentId insetImage(studentId, fileName) | filename must include the file extension
+    db.insertImage("A01234567", "A01234567.png");
 
     //PrintDB
-    //db.printDB();
+    db.printDB();
 }

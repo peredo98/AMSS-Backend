@@ -6,7 +6,7 @@
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
-
+#include <mongocxx/uri.hpp>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -48,11 +48,11 @@ class FaceDB{
         
         void saveImage(Mat image, string fileName){
 
-            imwrite("./../img/" + fileName, image);
+            imwrite("./../img/" + fileName + ".png", image);
 
         }
 
-        void insertImage(string id ,string imageURL){
+        void insertImage(string id ,string fileName){
             auto collection = conn["testdb"]["testcollection"];
 
             bsoncxx::builder::stream::document filter;
@@ -60,6 +60,8 @@ class FaceDB{
             filter << "studentId" << id;
 
             bsoncxx::builder::stream::document update;
+
+            string imageURL = ("./../img/" + fileName);
 
             update << "$set" << bsoncxx::builder::stream::open_document << "imageUrl" << imageURL << bsoncxx::builder::stream::close_document;
 

@@ -3,7 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**", "/usr/local/include/mongocxx/v_noabi", "/usr/local/include/bsoncxx/v_noabi" , "/usr/local/include/opencv4" 
             ],
             "defines": [],
             "macFrameworkPath": [],
