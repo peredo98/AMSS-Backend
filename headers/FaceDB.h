@@ -173,6 +173,17 @@ class FaceDB{
             return "";
         }
 
+        void deletePersonById(string id){
+            auto collection = conn["testdb"]["testcollection"];
+
+            bsoncxx::builder::stream::document filter;
+
+            filter << "studentId" << id;
+
+            collection.delete_one(filter.view());
+            
+        }
+
 
         //Print all documents in DB
         void printDB(){

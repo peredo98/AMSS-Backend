@@ -69,6 +69,9 @@ int main(int, char**) {
     //vector<vector<int>> biometrics{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; ;
     //db.insertBiometric("A01234567", biometrics);
 
+    //delete user by ID
+    db.deletePersonById("A01234567");
+
     //PrintDB
     db.printDB();
 }
