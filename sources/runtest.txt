@@ -1,0 +1,56 @@
+ // /* Crate Person createPerson(name, lastName, studentId, age, gender) eg: */
+// db.createPerson("Ruben", "Salazar", "A01234567", 21, "Male");
+
+
+// /* Create Person with imageURL createPerson(name, lastName, studentId, age, gender, imageURL) eg: */
+// db.createPerson("Ruben", "Salazar", "A01234567", 21, "Male", "A01234567.png");
+
+
+/* GET PERSON BASED ON VECTOR FORMAT*/
+vector<float> vSearch = {-0.126967, 0.0901249, 0.8624924, 0.10583552, -0.4165893};
+string json = db.getPersonByBiometricData(vSearch);
+d.Parse(json.c_str());
+Value& val = d["name"];
+printf("%s\n", val.GetString());
+
+
+/* GET A PERSON BASED ON MAT FORMAT*/
+Mat matSearch = Mat(1, vSearch.size(), CV_32FC1); // Mat(row, columns, type);
+memcpy(matSearch.data, vSearch.data(), vSearch.size() * sizeof(float));
+string jsonM = db.getPersonByBiometricData(matSearch);
+d.Parse(jsonM.c_str());
+Value& valM = d["name"];
+printf("%s\n", valM.GetString());
+
+
+// /* Create Person with imageURL and BiometricData createPerson(name, lastName, studentId, age, gender, imageURL, biometricData) eg: */
+//vector<vector<int>> biometrics{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; ;
+//db.createPerson("Ruben", "Salazar", "A01234567", 21, "Male", "A01234567.png", biometrics);
+
+/*
+//Get Person's name by StudentId getPersonById(studentId) eg:
+string json =  db.getPersonById("A01234567");
+d.Parse(json.c_str());
+Value& val = d["name"];
+printf("%s\n", val.GetString());
+*/
+
+//Read image
+/*
+Mat image;
+image = imread( "./../img/sample.jpeg", 1 );
+*/
+
+//Save image (the image will be saved with .png extension)
+/*
+db.saveImage(image, "A01234567");
+*/
+
+//Update imageURL by studentId insetImage(studentId, fileName) | filename must include the file extension
+/*
+db.insertImage("A01234567", "A01234567.png");
+*/
+
+//insert matrix into an existing user
+//vector<vector<int>> biometrics{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }; ;
+//db.insertBiometric("A01234567", biometrics);

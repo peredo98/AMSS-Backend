@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include<string> 
+#include <string>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
@@ -12,177 +12,269 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-using namespace std; 
+#include "ValidateData.cpp"
+#include <exception>
+#include <sstream>
+// #include <nlohmann/json.hpp>
+// using namespace nlohmann;
+
+// #include <jsoncpp/json/json.h>
+// #include <jsoncpp/json/reader.h>
+// #include <jsoncpp/json/writer.h>
+// #include <jsoncpp/json/value.h>
+
+#include "./../include/rapidjson/document.h"
+
+using namespace std;
 using namespace cv;
+using namespace rapidjson;
 
-class FaceDB{
 
-    public:
 
-        //init mongo
-        mongocxx::instance inst{};
-        mongocxx::client conn{mongocxx::uri{}};
-        bsoncxx::builder::stream::document document{}; 
+class FaceDB
+{
+    //init mongo
+    mongocxx::instance inst{};
+    mongocxx::client conn{mongocxx::uri{}};
+    bsoncxx::builder::stream::document document{};
 
-        FaceDB(){
+    //init global variables
+    ValidateData validateData;
+    mongocxx::collection collection = conn["testdb"]["testcollection"];
 
-        }
+public:
 
-        //to insert person in DB without photo
-        void createPerson(string name, string lastName, string id, int age, string gender){
+    FaceDB()
+    {
 
-            auto collection = conn["testdb"]["testcollection"];
-            
-            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age  << "gender" << gender;
+    }
+
+    //to insert person in DB without photo
+    void createPerson(string name, string lastName, string id, int age, string gender)
+    {
+        if(validateData.validate_all(name, lastName, id, gender)){
+            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender;
             collection.insert_one(document.view());
         }
-
-        //to insert person in DB with photo
-        void createPerson(string name, string lastName, string id, int age, string gender, string imageURL){
-
-            auto collection = conn["testdb"]["testcollection"];
             
-            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age  << "gender" << gender << "imageUrl" << imageURL;
+    }
+
+    //to insert person in DB with photo
+    void createPerson(string name, string lastName, string id, int age, string gender, string imageURL)
+    {
+        if(validateData.validate_all(name, lastName, id, gender)){
+            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "imageUrl" << imageURL;
             collection.insert_one(document.view());
         }
+    }
 
-         //to insert person in DB with photo and biometrics
-        void createPerson(string name, string lastName, string id, int age, string gender, vector<vector<int>> biometrics){
+    //to insert person in DB with biometrics
+    void createPerson(string name, string lastName, string id, int age, string gender, Mat mymat)
+    {
+        if(validateData.validate_all(name, lastName, id, gender)){
+            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender;
+            vector<float> biometrics = matToVector(mymat);
+            auto array = document << "biometricData " << bsoncxx::builder::stream::open_array;
 
-            auto collection = conn["testdb"]["testcollection"];
-            
-            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age  << "gender" << gender;
-            
-
-            auto array = document << "biometricData "<<  bsoncxx::builder::stream::open_array;
-
-            for (int i =0;i < biometrics.size(); i++) {
-
-                biometrics[i].size();
-                
-                array << bsoncxx::builder::stream::open_array;
-                
-                for (int j =0;j < biometrics[i].size(); j++) {
-                   array << biometrics[i][j];
-                }
-
-                array << bsoncxx::builder::stream::close_array;
+            for (int i = 0; i < biometrics.size(); i++)
+            {
+                array << biometrics[i];
             }
             array << bsoncxx::builder::stream::close_array;
 
             collection.insert_one(document.view());
         }
+    }
 
-        //to insert person in DB with photo and biometrics
-        void createPerson(string name, string lastName, string id, int age, string gender, string imageURL, vector<vector<int>> biometrics){
+    //to insert person in DB with photo and biometrics
+    void createPerson(string name, string lastName, string id, int age, string gender, string imageURL, Mat mymat)
+    {
+        if(validateData.validate_all(name, lastName, id, gender)){
+            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "imageUrl" << imageURL;
 
-            auto collection = conn["testdb"]["testcollection"];
-            
-            document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age  << "gender" << gender << "imageUrl" << imageURL;
-            
+            vector<float> biometrics = matToVector(mymat);
+            auto array = document << "biometricData " << bsoncxx::builder::stream::open_array;
 
-            auto array = document << "biometricData "<<  bsoncxx::builder::stream::open_array;
-
-            for (int i =0;i < biometrics.size(); i++) {
-
-                biometrics[i].size();
-                
-                array << bsoncxx::builder::stream::open_array;
-                
-                for (int j =0;j < biometrics[i].size(); j++) {
-                   array << biometrics[i][j];
-                }
-
-                array << bsoncxx::builder::stream::close_array;
+            for (int i = 0; i < biometrics.size(); i++)
+            {
+                array << biometrics[i];
             }
             array << bsoncxx::builder::stream::close_array;
 
             collection.insert_one(document.view());
         }
+    }
+
+    void saveImage(Mat image, string fileName)
+    {
+        imwrite("./../img/" + fileName + ".png", image);
+    }
+
+    //write image url into existing user
+    void insertImage(string id, string fileName)
+    {
+        bsoncxx::builder::stream::document filter;
+
+        filter << "studentId" << id;
+
+        bsoncxx::builder::stream::document update;
+
+        string imageURL = ("./../img/" + fileName);
+
+        update << "$set" << bsoncxx::builder::stream::open_document << "imageUrl" << imageURL << bsoncxx::builder::stream::close_document;
+
+        collection.update_one(filter.view(), update.view());
+    }
+
+    //insert matrix with biometric data into existing user
+    void insertBiometric(string id, Mat mymat)
+    {
+        bsoncxx::builder::stream::document filter;
+
+        filter << "studentId" << id;
+
+        bsoncxx::builder::stream::document update;
+
+        update << "$set" << bsoncxx::builder::stream::open_document;
+        vector<float> biometrics = matToVector(mymat);
+        auto array = update << "biometricData " << bsoncxx::builder::stream::open_array;
         
-        void saveImage(Mat image, string fileName){
-            imwrite("./../img/" + fileName + ".png", image);
+        for (int i = 0; i < biometrics.size(); i++)
+        {
+            array << biometrics[i];
         }
+        array << bsoncxx::builder::stream::close_array;
 
-        //write image url into existing user
-        void insertImage(string id ,string fileName){
-            auto collection = conn["testdb"]["testcollection"];
+        update << bsoncxx::builder::stream::close_document;
 
-            bsoncxx::builder::stream::document filter;
+        collection.update_one(filter.view(), update.view());
+    }
 
-            filter << "studentId" << id;
 
-            bsoncxx::builder::stream::document update;
 
-            string imageURL = ("./../img/" + fileName);
+    string getPersonByBiometricData(vector<float> myvector){
 
-            update << "$set" << bsoncxx::builder::stream::open_document << "imageUrl" << imageURL << bsoncxx::builder::stream::close_document;
+        bsoncxx::builder::stream::document filter;
 
-            collection.update_one(filter.view(), update.view());
+        auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
+        for (int i = 0; i < myvector.size(); i++)
+        {
+            array << myvector[i];
         }
-        
-         //insert matrix with viometric data into existing user
-        void insertBiometric(string id, vector<vector<int>> biometrics){
-            auto collection = conn["testdb"]["testcollection"];
+        array << bsoncxx::builder::stream::close_array;
 
-            bsoncxx::builder::stream::document filter;
-
-            filter << "studentId" << id;
-
-            bsoncxx::builder::stream::document update;
-     
-            update << "$set" << bsoncxx::builder::stream::open_document;
-
-            auto array = update << "biometricData "<<  bsoncxx::builder::stream::open_array;
-
-            for (int i =0;i < biometrics.size(); i++) {
-
-                biometrics[i].size();
-                
-                array << bsoncxx::builder::stream::open_array;
-                
-                for (int j =0;j < biometrics[i].size(); j++) {
-                   array << biometrics[i][j];
-                }
-
-                array << bsoncxx::builder::stream::close_array;
-            }
-            array << bsoncxx::builder::stream::close_array;
-
-            update << bsoncxx::builder::stream::close_document;
-
-            collection.update_one(filter.view(), update.view());
-        }
-        
-        // to retrieve person from DB
-        string getPersonById(string id){
-            auto collection = conn["testdb"]["testcollection"];
-
-            bsoncxx::builder::stream::document filter;
-
-            filter << "studentId" << id;
-
-            bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
             collection.find_one(filter.view());
-            if(maybe_result) {
-
-                //std::cout << bsoncxx::to_json(*maybe_result) << "\n";
-
-                return bsoncxx::to_json(*maybe_result);
-            }
-            return "";
+        if (maybe_result)
+        {
+            return bsoncxx::to_json(*maybe_result);
         }
+        return "Not person found";
+    }
+
+    string getPersonByBiometricData(Mat matSearch){
+
+        bsoncxx::builder::stream::document filter;
+        vector<float> myvector = matToVector(matSearch);
+        auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
+        for (int i = 0; i < myvector.size(); i++)
+        {
+            array << myvector[i];
+        }
+        array << bsoncxx::builder::stream::close_array;
+
+        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+            collection.find_one(filter.view());
+        if (maybe_result)
+        {
+            return bsoncxx::to_json(*maybe_result);
+        }
+        return "Not person found";
+    }
 
 
-        //Print all documents in DB
-        void printDB(){
-            auto collection = conn["testdb"]["testcollection"];
-            auto cursor = collection.find({});
+    // to retrieve person from DB
+    string getPersonById(string id)
+    {
+        bsoncxx::builder::stream::document filter;
 
+        filter << "studentId" << id;
+
+        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+            collection.find_one(filter.view());
+        if (maybe_result)
+        {
+            return bsoncxx::to_json(*maybe_result);
+        }
+        return "Not person found";
+    }
+
+
+    void deletePersonById(string id){
+        bsoncxx::builder::stream::document filter;
+
+        filter << "studentId" << id;
+        collection.delete_one(filter.view());
+    }
+
+
+    vector<float> matToVector(Mat mymat){
+        vector<float> normalVector; 
+        normalVector.assign((float*)mymat.datastart, (float*)mymat.dataend);
+        return normalVector;
+
+        // This is just to confirm 
+
+        // int cnt=0;
+        // int r = 1; 
+        // int c = normalVector.size();
+        // for(int i=0; i< c; ++i)
+        // {
+        //     for(int j=0; j< r; ++j) {
+        //         printf("%lf ", normalVector[cnt++]);
+        //         printf("\n");
+        //     }
             
-            for (auto&& doc : cursor) {
-                std::cout << bsoncxx::to_json(doc) << std::endl;
-            }
+        // }
+    }
+
+    Mat vectorToMat(vector<float> vtest){
+        Mat mymat = Mat(1, vtest.size(), CV_32FC1); // Mat(row, columns, type);
+        memcpy(mymat.data, vtest.data(), vtest.size() * sizeof(float));
+        return mymat;
+
+        //ANOTHER WAY
+        // double vtest2[5] = {-0.116467, 0.0991249, 0.0624924, 0.00583552, -0.0165893};
+        // Mat mymat = Mat(5, 5, CV_64FC1, vtest2).clone();
+    }
+
+    
+
+
+    vector<string> returnData(){
+        auto cursor = collection.find({});
+         
+        cout << "matriz " << endl << endl;
+        vector<string> matrix;
+        for (auto &&doc : cursor)
+        {
+            string json = bsoncxx::to_json(doc) ;
+            matrix.push_back(json);
         }
-        
+        return matrix;
+    }
+
+    
+
+    //Print all documents in DB
+    void printDB()
+    {
+        auto cursor = collection.find({});
+
+        cout << endl << "- -THE DATABASE IS: " << endl << endl;
+        for (auto &&doc : cursor)
+        {
+            cout << bsoncxx::to_json(doc) << endl << endl;
+        }
+    }
 };

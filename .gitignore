@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+headers/descr_imprv_ytf.txt
+vcpkg/
