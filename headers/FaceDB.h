@@ -15,6 +15,8 @@
 #include "ValidateData.cpp"
 #include <exception>
 #include <sstream>
+
+#include <vector>
 // #include <nlohmann/json.hpp>
 // using namespace nlohmann;
 
@@ -24,6 +26,7 @@
 // #include <jsoncpp/json/value.h>
 
 #include "./../include/rapidjson/document.h"
+// #include "./../sources/test.cpp"
 
 using namespace std;
 using namespace cv;
@@ -41,12 +44,36 @@ class FaceDB
     //init global variables
     ValidateData validateData;
     mongocxx::collection collection = conn["testdb"]["testcollection"];
+    vector<float> dataset;
+    cv::Mat_<float> dataMatset;
+    long totalPeople;
 
 public:
 
     FaceDB()
     {
+        dataset = {};
+        totalPeople = getTotal();
+    }
 
+    cv::Mat_<float> getDataSet(){
+        return dataMatset;
+    }
+
+    void makeDataSet(){
+        // update dataset <float>
+    }
+
+    //It is called every time you add or delete a person in the db
+    void updateDataSet(bool upOrdel){ //true = createPerson() ;  false = deletePerson();
+        if(upOrdel){
+            totalPeople++;
+        }else{
+            totalPeople--;
+        }
+        makeDataSet();
+        dataMatset = vectorToMat(totalPeople, dataset);
+        
     }
 
     //to insert person in DB without photo
@@ -55,6 +82,7 @@ public:
         if(validateData.validate_all(name, lastName, id, gender)){
             document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender;
             collection.insert_one(document.view());
+            updateDataSet(true);
         }
             
     }
@@ -65,6 +93,7 @@ public:
         if(validateData.validate_all(name, lastName, id, gender)){
             document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "imageUrl" << imageURL;
             collection.insert_one(document.view());
+            updateDataSet(true);
         }
     }
 
@@ -83,6 +112,7 @@ public:
             array << bsoncxx::builder::stream::close_array;
 
             collection.insert_one(document.view());
+            updateDataSet(true);
         }
     }
 
@@ -102,7 +132,16 @@ public:
             array << bsoncxx::builder::stream::close_array;
 
             collection.insert_one(document.view());
+            updateDataSet(true);
         }
+    }
+
+    void deletePersonById(string id){
+        bsoncxx::builder::stream::document filter;
+
+        filter << "studentId" << id;
+        collection.delete_one(filter.view());
+        updateDataSet(false);
     }
 
     void saveImage(Mat image, string fileName)
@@ -210,14 +249,6 @@ public:
     }
 
 
-    void deletePersonById(string id){
-        bsoncxx::builder::stream::document filter;
-
-        filter << "studentId" << id;
-        collection.delete_one(filter.view());
-    }
-
-
     vector<float> matToVector(Mat mymat){
         vector<float> normalVector; 
         normalVector.assign((float*)mymat.datastart, (float*)mymat.dataend);
@@ -238,8 +269,8 @@ public:
         // }
     }
 
-    Mat vectorToMat(vector<float> vtest){
-        Mat mymat = Mat(1, vtest.size(), CV_32FC1); // Mat(row, columns, type);
+    Mat vectorToMat(long rows, vector<float> vtest){
+        Mat mymat = Mat(rows, vtest.size(), CV_32FC1); // Mat(row, columns, type);
         memcpy(mymat.data, vtest.data(), vtest.size() * sizeof(float));
         return mymat;
 
@@ -254,7 +285,7 @@ public:
     vector<string> returnData(){
         auto cursor = collection.find({});
          
-        cout << "matriz " << endl << endl;
+        cout << "matriz 2" << endl << endl;
         vector<string> matrix;
         for (auto &&doc : cursor)
         {
@@ -265,7 +296,15 @@ public:
     }
 
     
-
+    long getTotal(){
+        auto cursor = collection.find({});
+        long total = 0;
+        for (auto &&doc : cursor)
+        {
+            total ++;
+        }
+        return total;
+    }
     //Print all documents in DB
     void printDB()
     {
@@ -276,5 +315,6 @@ public:
         {
             cout << bsoncxx::to_json(doc) << endl << endl;
         }
+
     }
 };
