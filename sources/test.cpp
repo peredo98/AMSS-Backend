@@ -25,7 +25,7 @@ using namespace rapidjson;
 
 FaceDB db;
 Document d;
-IndexSearch flannSearch;
+IndexSearch flannSearch(db.getDataSet());
 
 void createMatrix()
 {
@@ -53,13 +53,13 @@ int main(int, char **)
     /* CREATE A PERSON WITH BIOMETRIC DATA  */
     //ESTE VECTOR YA NO SIRVE
     // vector<float> vtest = {-0.0715808, 0.234204, 0.066136, -0.0514578, -0.217422};
-    // Mat mymat = db.vectorToMat(1, vtest);
+    // Mat mymat = db.vectorToMat(1, vtest.size(), vtest);
     // db.createPerson("Alan", "Zavala", "A01338448", 20, "Male", mymat);
-    // flannSearch.updateIndex(db.getDataSet());
-    flannSearch.updateIndex();
+    // flannSearch.updateIndex(db.getDataSet()); //Just after when a person is created or deleted.
 
     // /* DELETE A PERSON BASED ON ITS ID */
     // db.deletePersonById("A01234567");
+    // flannSearch.updateIndex(db.getDataSet());
 
     // /* GET PERSON'S NAME BY STUDENT ID */
     // string json =  db.getPersonById("A01024192");
@@ -76,7 +76,7 @@ int main(int, char **)
 
     // /* GET A PERSON BASED ON MAT FORMAT*/
     // vector<float> vSearch = {-0.0576136, 0.171748, 0.0571629, -0.152391, -0.166514};
-    // Mat matSearch = db.vectorToMat(1, vSearch);
+    // Mat matSearch = db.vectorToMat(1, vSearch.size() ,vSearch);
     // string jsonM = db.getPersonByBiometricData(matSearch);
     // d.Parse(jsonM.c_str());
     // Value& valM = d["name"];
@@ -85,8 +85,8 @@ int main(int, char **)
 
     /* MAKE FILTER IN DB -- A PERSON PASSES  */
     vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
-    Mat matSearch = db.vectorToMat(1, vSearch);
-    flannSearch.searchPerson(db.getDataSet(), matSearch, 5);
+    Mat matSearch = db.vectorToMat(1, vSearch.size(), vSearch);
+    flannSearch.searchPerson(matSearch, 5);
 
     //PRINTDB
     db.printDB();

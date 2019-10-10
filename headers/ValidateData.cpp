@@ -16,6 +16,7 @@ class ValidateData
 public:
     ValidateData()
     {
+        bool validate_all(string, string, string, string);
         bool validar_matricula(string);
         bool validar_nombre(string);
         bool validar_sexo(string);

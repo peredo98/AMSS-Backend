@@ -52,7 +52,8 @@ public:
 
     FaceDB()
     {
-        dataset = {};
+        cout << "FaceDB class created..." << endl << endl;
+        makeDataSet();
         totalPeople = getTotal();
     }
 
@@ -62,6 +63,7 @@ public:
 
     void makeDataSet(){
         // update dataset <float>
+        // dataset = {};
     }
 
     //It is called every time you add or delete a person in the db
@@ -72,7 +74,7 @@ public:
             totalPeople--;
         }
         makeDataSet();
-        dataMatset = vectorToMat(totalPeople, dataset);
+        dataMatset = vectorToMat(totalPeople, dataset.size() ,dataset);
         
     }
 
@@ -269,9 +271,9 @@ public:
         // }
     }
 
-    Mat vectorToMat(long rows, vector<float> vtest){
-        Mat mymat = Mat(rows, vtest.size(), CV_32FC1); // Mat(row, columns, type);
-        memcpy(mymat.data, vtest.data(), vtest.size() * sizeof(float));
+    Mat vectorToMat(long rows, long col, vector<float> vtest){
+        Mat mymat = Mat(rows, col, CV_32FC1); // Mat(row, columns, type);
+        memcpy(mymat.data, vtest.data(), vtest.size()*sizeof(float));
         return mymat;
 
         //ANOTHER WAY
