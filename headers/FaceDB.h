@@ -333,4 +333,62 @@ public:
         }
 
     }
+
+    double distance(vector<float> p, vector<float> q){
+        double d = 0;
+        if(p.size() == q.size()){
+            for(int i = 0; i<p.size(); i++){
+                d += (p[i] - q[i])*(p[i] - q[i]);
+
+            }
+            d = sqrt(d);
+            return d;
+        }else{ 
+            return 0x1.fffffffffffffp+1023;
+        }
+        
+    }
+
+    vector<Mat> searchPersonKnn(cv::Mat_<float> query, int numKnn)
+    {
+        cout << "Time to search..." << endl << endl;
+
+        vector<Mat> result;
+
+        auto cursor = collection.find({});
+
+        for (auto &&doc : cursor)
+        {
+            vector<float> tempVector;
+            bsoncxx::document::element bio_element{doc["biometricData "]};
+            if (bio_element){
+                auto arr = bio_element.get_array();
+                cout << bsoncxx::to_json(arr.value) << endl << endl;
+                for(int i = 0; i<arr.value.length(); i++){
+                    tempVector.push_back((float) arr.value[i].get_double());
+                }
+                if (result.size() < numKnn){
+                    Mat tempMat = vectorToMat(1, tempVector.size(), tempVector);
+                    result.push_back(tempMat);
+                }
+                else{
+                    int farestVector = 0;
+                    for(int i = 1; i<result.size(); i++){
+                        if(distance(matToVector(query), matToVector(result[farestVector])) < distance(matToVector(query),matToVector(result[i]))){
+                            farestVector = i;
+                        } 
+                    }
+                    if(distance(matToVector(query), matToVector(result[farestVector])) > distance(matToVector(query), tempVector)){
+                        Mat tempMat = vectorToMat(1, tempVector.size(), tempVector);
+                        result[farestVector] = tempMat;
+                    }
+                }
+                
+            }
+            
+        }
+        return result;
+    }
+
+   
 };

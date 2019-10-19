@@ -45,4 +45,19 @@ public:
         // }
     };
 
+    double distance(vector<float> p, vector<float> q){
+        double d = 0;
+        if(p.size() == q.size()){
+            for(int i = 0; i<p.size(); i++){
+                d += (p[i] - q[i])*(p[i] - q[i]);
+
+            }
+            d = sqrt(d);
+            return d;
+        }else{
+            return 0x1.fffffffffffffp+1023;
+        }
+        
+    }
+
 };

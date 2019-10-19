@@ -128,7 +128,7 @@ void testKnnSearch(
         std::cout << std::endl;
     }
 }
- 
+/*
 int  main ()
 {
     int numKnn = 6;
@@ -161,4 +161,4 @@ int  main ()
     delete [] resultDistance.ptr();
  
     return 0;
-}
+}*/
