@@ -1,27 +1,99 @@
-# AMSS-Backend
+# TEAM 4 - DATABASE
 
-## Descripción de Proyecto
-Crear una base de datos que reciba la informacion biometrica de una persona y regrese su foto e informacion. Asi como su nombre, matricula, edad, y una pequeña descripción.
+## Proyect description
 
-### Requerimientos Funcionales
-- El sistema será capaz de guardar información biométrica, personal (nombre, matrícula, edad y descripción) y foto de un usuario.
-- El sistema regresará la información personal y foto del usuario que tenga la mayor similitud a la persona que acaba de ingresar.
-- El sistema deberá guardar los miles de perfiles mediante la agrupación de características físicas.
-- El sistema deberá comparar el perfil biométrico del usuario que acaba de entrar con base en la agrupación de los perfiles.
-- El sistema deberá ser capaz de hacer búsquedas filtradas tomando en cuenta un porcentaje de similitud.
-- El sistema podrá agregar, editar o eliminar los perfiles.
+Create a database which receive the vector description of the person who has just enter. After that, get their personal and biographic information to notify if the person is already in the system.
 
-### Requerimientos No Funcionales
-- El sistema solo acpeta datos biometricos.
-- El porcentaje de error en el sistema debe de ser menor o igual al 10%.
-- El tiempo de respuesta del sistema debe de ser igual o menor a un segundo.
-- La base de datos debe tener la capacidad de guardad 100,000 perfiles.
-- La base de datos funcionará tanto en MongoDB como en Firebase.
-- La API rest funcionará en C++.
-- El sistema debera de ser accessado mediante peticiones HTTP.
-- El sistema deberá restrigingir a un solo perfil por persona. Por lo tanto, no se deberá aceptar repetidos.
-- El sistema debe contar con manuales de usuario estructurados adecuadamente.
+## Functional requirements
 
-## Instalar
+- The system will be able to save biometric, personal information (name, id, age, gender, lastname) and a user's photo.
+- The system returns the personal information of the person that has the greatest similarity to the person who has just entered.
+- The search of the database must be index.
+- The system can add, edit or delete profiles.
+- The database must have a backup system.
 
-## Pruebas
+## Non-functional requirements
+
+- The system only accepts biometric, biographic data and a photo.
+- The percentage of error in returning the right person must be less than or equal to 10% (1 of 10 person who enter may fail).
+- The response time of the search system must be equal to or less than one second.
+- The database must have the ability to save 100,000 profiles.
+- The database works in both MongoDB and OpenCV.
+- The system must restrict only one profile per person. Therefore, you should not accept repeated.
+- The system must have properly structured user manuals.
+- The system must be multi platform (Windows, Mac OS , Linux ).
+
+# Installation
+
+For this proyect it's neccesaary to have `MongoDB` which allow you to store the data and `Mongocxx` which is the driver of MongoDB for C++ (For further information about Mongocxx click [here](http://mongocxx.org/mongocxx-v3/tutorial/)).
+
+For `Mac OS` and `Windows` is different the installation and dependending of the system you have follow the corresponding process:
+
+- **Mac OS**
+
+First, you need to have Homebrew installed to have the correct dependencies for this proyect.
+
+> Homebrew not installed
+
+Open your terminal and run the following commands to install Hombrew.
+
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew update
+
+Also add Homebrew to PATH
+
+    echo "# Homebrew" >> ~/.bash_profile
+    echo "export PATH=/usr/local/bin:\$PATH" >> ~/.bash_profile
+
+Then, you should have Homebrew installed and you're ready to install de dependecies.
+
+> Homebrew installed
+
+Open your terminal and run the following commands to install de dependencies.
+
+    brew install python3
+    brew install cmake
+    brew install qt5
+    QT5PATH=/usr/local/Cellar/qt/5.11.2_1
+
+    brew install mongodb
+
+    brew tap mongodb/brew
+
+    brew install mongodb
+
+    brew install mongodb-community
+
+    brew install mongo-cxx-driver
+
+    brew services start mongodb-community
+
+    brew install pkg-config
+
+    brew tap nlohmann/json
+
+    brew install nlohmann-json
+
+    brew tap cuber/homebrew-jsoncpp
+
+    brew install jsoncpp
+
+<br>
+
+- **Windows**
+
+# Tests
+
+To test the proyect, first compile it and then run it. Depending of the OS you have, the process will be different.
+
+- **MAC OS**
+
+  Open your terminal in the `sources` foulder and run the following command to run.
+
+  > g++ --std=c++11 test.cpp -o test \$(pkg-config --cflags --libs libmongocxx opencv4)
+
+  In the same root run the following command to test the project.
+
+  > ./test
+
+* **Windows**
