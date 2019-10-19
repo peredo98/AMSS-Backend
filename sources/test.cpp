@@ -30,12 +30,12 @@ IndexSearch flannSearch(db.getDataSet());
 //VERSION 2.1 -ITERACIÓN 2
 int main(int, char **)
 {
-    
+
     /* CREATE A PERSON WITH BIOMETRIC DATA  */
     // vector<float> vtest = {-0.0554103, 0.234784, 0.0174269, -0.0774777, -0.147699};
     // Mat mymat = db.vectorToMat(1, vtest.size(), vtest);
     // db.createPerson("Nancy", "Medina", "A01330291", 20, "Female", mymat);
-    flannSearch.updateIndex(db.getDataSet()); //Just after when a person is created or deleted.
+    // flannSearch.updateIndex(db.getDataSet()); //Just after when a person is created or deleted.
 
     // /* DELETE A PERSON BASED ON ITS ID */
     // db.deletePersonById("A01234567");
@@ -62,16 +62,24 @@ int main(int, char **)
     // Value& valM = d["name"];
     // printf("%s\n", valM.GetString());
 
-
     /* MAKE FILTER IN DB -- A PERSON PASSES  */
-    //vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
-    //Mat matSearch = db.vectorToMat(1, vSearch.size(), vSearch);
+    vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
+    Mat matSearch = db.vectorToMat(1, vSearch.size(), vSearch);
     //flannSearch.searchPerson(matSearch, 5);
 
     //print Biometric Data of all set
-    db.getBiometricData();
+    // db.getBiometricData();
 
     //PRINTDB
     db.printDB();
-
+    vector<Mat> result = db.searchPersonKnn(matSearch, 3);
+    for (int i = 0; i < result.size(); i++)
+    {
+        vector<float> tempVector = db.matToVector(result[i]);
+        for (int j = 0; j < tempVector.size(); j++)
+        {
+            printf("%f ", tempVector[i]);
+        }
+        printf("\n");
+    }
 }
