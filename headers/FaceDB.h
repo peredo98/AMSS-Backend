@@ -66,6 +66,20 @@ public:
         // dataset = {};
     }
 
+    void getBiometricData(){
+        auto cursor = collection.find({});
+
+        for (auto &&doc : cursor)
+        {
+            bsoncxx::document::element bio_element{doc["biometricData "]};
+            if (bio_element){
+                auto arr = bio_element.get_array();
+                cout << bsoncxx::to_json(arr.value) << endl << endl;
+            }
+        }
+    }
+
+
     //It is called every time you add or delete a person in the db
     void updateDataSet(bool upOrdel){ //true = createPerson() ;  false = deletePerson();
         if(upOrdel){
