@@ -72,13 +72,13 @@ int main(int, char **)
 
     //PRINTDB
     db.printDB();
-    vector<Mat> result = db.searchPersonKnn(matSearch, 3);
+    vector<Mat> result = db.searchPersonKnn(matSearch, 4);
     for (int i = 0; i < result.size(); i++)
     {
         vector<float> tempVector = db.matToVector(result[i]);
         for (int j = 0; j < tempVector.size(); j++)
         {
-            printf("%f ", tempVector[i]);
+            printf("%f ", tempVector[j]);
         }
         printf("\n");
     }
