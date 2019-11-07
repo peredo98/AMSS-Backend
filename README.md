@@ -2,6 +2,10 @@
 
 ## Proyect description
 
+Create a database which receive the vector description of the person who has just enter. After that, get their personal and biographic in# TEAM 4 - DATABASE
+
+## Proyect description
+
 Create a database which receive the vector description of the person who has just enter. After that, get their personal and biographic information to notify if the person is already in the system.
 
 ## Functional requirements
@@ -82,9 +86,11 @@ Open your terminal and run the following commands to install de dependencies.
 
 - **Windows**
 
-# Tests
+# Compilation
 
 To test the proyect, first compile it and then run it. Depending of the OS you have, the process will be different.
+
+The `test.cpp` file is the main file.
 
 - **MAC OS**
 
@@ -97,3 +103,71 @@ To test the proyect, first compile it and then run it. Depending of the OS you h
   > ./test
 
 * **Windows**
+
+# Test
+
+- Create a person in the data base
+
+  There are multiple ways to insert someone into the data base. However, the most recomendable one is the following. It is neccessary to have the name, parternal lastname, id, age, gender and the decription vector.
+
+  > vector<float> vtest = {-0.0554103, 0.234784, 0.0174269, -0.0774777, -0.147699};
+  >
+  > Mat mymat = db.vectorToMat(1, vtest.size(), vtest);
+  >
+  > db.createPerson("Nancy", "Medina", "A01330291", 20, "Female", mymat);
+
+- Delete a person related to an ID
+
+  > db.deletePersonById("A01234567");
+
+- Get a person related to its description vector on vector<float> format
+
+  > vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
+  >
+  > string json = db.getPersonByBiometricData(vSearch);
+  >
+  > d.Parse(json.c_str());
+  >
+  > Value& val = d["name"];
+  >
+  > printf("%s\n", val.GetString());
+
+- Get a person related to its description vector on Mat format
+
+  > vector<float> vSearch = {-0.0576136, 0.171748, 0.0571629, -0.152391, -0.166514};
+  >
+  > Mat matSearch = db.vectorToMat(1, vSearch.size() ,vSearch);
+  >
+  > string jsonM = db.getPersonByBiometricData(matSearch);
+  >
+  > d.Parse(jsonM.c_str());
+  >
+  > Value& valM = d["name"];
+  >
+  > printf("%s\n", valM.GetString());
+
+- Get the description vector of the four persons most alike to someone
+
+  > vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494}; //Vector of the person you are looking for.
+  >
+  > Mat matSearch = db.vectorToMat(1, vSearch.size(), vSearch);
+  >
+  > vector<Mat> result = db.searchPersonKnn(matSearch, 4);
+  >
+  > for (int i = 0; i < result.size(); i++){
+  >
+  > vector<float> tempVector = db.matToVector(result[i]);
+  >
+  > for (int j = 0; j < tempVector.size(); j++){
+  >
+  > printf("%f ", tempVector[j]);
+  > }
+  >
+  > printf("\n");
+  >
+  > }
+
+- Print the data base
+
+  > db.printDB();
+  > formation to notify if the person is already in the system.

@@ -13,10 +13,8 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "./../headers/FaceDB.h"
-#include "./../headers/IndexSearch.h"
 #include "./../include/rapidjson/document.h"
 
-// #include <jsoncpp/json/json.h>
 #include <regex>
 
 using namespace std;
@@ -25,53 +23,69 @@ using namespace rapidjson;
 
 FaceDB db;
 Document d;
-IndexSearch flannSearch(db.getDataSet());
 
 //VERSION 2.1 -ITERACIÓN 2
 int main(int, char **)
 {
+    cout << "version 13" << endl;
 
     /* CREATE A PERSON WITH BIOMETRIC DATA  */
-    // vector<float> vtest = {-0.0554103, 0.234784, 0.0174269, -0.0774777, -0.147699};
+    // vector<float> vtest = {-0.076754, 0.0851077, 0.00011571, -0.072535, -0.114122};
     // Mat mymat = db.vectorToMat(1, vtest.size(), vtest);
-    // db.createPerson("Nancy", "Medina", "A01330291", 20, "Female", mymat);
-    // flannSearch.updateIndex(db.getDataSet()); //Just after when a person is created or deleted.
+    // db.createPerson("Oscar", "Ruiz", "A01330192", 25, "Male", mymat);
+
 
     // /* DELETE A PERSON BASED ON ITS ID */
-    // db.deletePersonById("A01234567");
-    // flannSearch.updateIndex(db.getDataSet());
+    // cout << "delete a person" << endl;
+    // db.deletePersonById("A01338798");
+
 
     // /* GET PERSON'S NAME BY STUDENT ID */
-    // string json =  db.getPersonById("A01024192");
-    // d.Parse(json.c_str());
-    // Value& val = d["name"];
-    // printf("%s\n", val.GetString());
+    // string name =  db.getNameById("A01024192");
+    // if(name != "NULL"){
+    //     cout << "The person's name is: " << name << endl;
+    // }
 
-    // /* GET PERSON BASED ON VECTOR FORMAT*/
-    // vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
-    // string json = db.getPersonByBiometricData(vSearch);
-    // d.Parse(json.c_str());
-    // Value& val = d["name"];
-    // printf("%s\n", val.GetString());
 
-    // /* GET A PERSON BASED ON MAT FORMAT*/
+    // /* GET PERSON'S NAME BASED ON VECTOR FORMAT*/
+    // vector<float> vSearch = {-0.077756, 0.192836, 0.0550688, -0.168125, -0.182494};
+    // string name = db.getNameByBiometricData(vSearch);
+    // if(name != "NULL"){
+    //     cout << "The person's name is: " << name << endl;
+    // }
+
+
+    // /* GET A PERSON'S NAME BASED ON MAT FORMAT*/
     // vector<float> vSearch = {-0.0576136, 0.171748, 0.0571629, -0.152391, -0.166514};
     // Mat matSearch = db.vectorToMat(1, vSearch.size() ,vSearch);
-    // string jsonM = db.getPersonByBiometricData(matSearch);
-    // d.Parse(jsonM.c_str());
-    // Value& valM = d["name"];
-    // printf("%s\n", valM.GetString());
+    // string name = db.getNameByBiometricData(matSearch);
+    // if(name != "NULL"){
+    //     cout << "The person's name is: " << name << endl;
+    // }
 
-    /* MAKE FILTER IN DB -- A PERSON PASSES  */
-    vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
+    // /* GET THE BIOMETRIC DATA BASED ON ITS ID */
+    // Mat mymat = db.getMatById("A01025599");
+    // if(mymat.rows != 0){ 
+    //     cout << "The mat of the person you look for is: " << mymat << endl;
+    // }
+    
+
+    /* SEARCH IN DB -- A PERSON PASSES  */
+    vector<float> vSearch = {-0.076754, 0.0851077, 0.00011571, -0.072535, -0.114122};
     Mat matSearch = db.vectorToMat(1, vSearch.size(), vSearch);
-    //flannSearch.searchPerson(matSearch, 5);
+    Mat nearestNeighbors = db.searchPerson(matSearch, 4);
 
-    //print Biometric Data of all set
-    // db.getBiometricData();
 
     //PRINTDB
-    db.printDB();
+    // db.printDB();
+
+    
+    
+    
+    
+    
+    //ALTERNATIVE KNNSEARCH
+    /*
     vector<Mat> result = db.searchPersonKnn(matSearch, 4);
     for (int i = 0; i < result.size(); i++)
     {
@@ -82,4 +96,5 @@ int main(int, char **)
         }
         printf("\n");
     }
+    */
 }

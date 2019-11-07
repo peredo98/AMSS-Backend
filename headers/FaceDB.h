@@ -17,16 +17,9 @@
 #include <sstream>
 
 #include <vector>
-// #include <nlohmann/json.hpp>
-// using namespace nlohmann;
-
-// #include <jsoncpp/json/json.h>
-// #include <jsoncpp/json/reader.h>
-// #include <jsoncpp/json/writer.h>
-// #include <jsoncpp/json/value.h>
 
 #include "./../include/rapidjson/document.h"
-// #include "./../sources/test.cpp"
+#include "./IndexSearch.h"
 
 using namespace std;
 using namespace cv;
@@ -41,60 +34,241 @@ class FaceDB
 
     //init global variables
     ValidateData validateData;
+    IndexSearch flannSearch;
+    Document d;
+
     mongocxx::collection collection = conn["testdb"]["testcollection"];
-    vector<float> dataset;
+
     cv::Mat_<float> dataMatset;
     long totalPeople;
 
 public:
     FaceDB()
     {
-        cout << "FaceDB class created..." << endl
-             << endl;
-        makeDataSet();
+        cout << "FaceDB class created..." << endl;
         totalPeople = getTotal();
+        makeDataSet();
+        updateIndex();
     }
 
-    cv::Mat_<float> getDataSet()
+    void updateIndex()
     {
-        return dataMatset;
+        flannSearch.updateIndex(dataMatset);
+    }
+
+    Mat searchPerson(cv::Mat_<float> query, int numKnn)
+    {
+        vector<Mat> in_dis = flannSearch.searchPerson(query, numKnn);
+
+        Mat indices = in_dis[0];
+        Mat dist = in_dis[1];
+        Mat nearestNeighbors;
+
+        for(int i=0; i<numKnn; i++){
+            Mat neigh = dataMatset.row(indices.at<int>(0, i));
+            cout << neigh << endl;
+            nearestNeighbors.push_back(neigh);
+        }
+        return nearestNeighbors;
     }
 
     void makeDataSet()
     {
-        // update dataset <float>
-        // dataset = {};
+
+        Mat_<double> mymat(totalPeople, 5);
+
+        int i = 0;
+        auto cursor = collection.find({});
+        for (auto &&doc : cursor)
+        {
+            bsoncxx::document::element bio_element{doc["biometricData "]};
+            if (bio_element)
+            {
+                vector<float> tempVector;
+                auto arr = bio_element.get_array();
+                for (int j = 0; j < arr.value.length(); j++)
+                {
+                    try
+                    {
+                        float tempVal = (float)arr.value[j].get_double();
+                        tempVector.push_back(tempVal);
+                        mymat(i, j) = tempVal;
+                    }
+                    catch (exception e)
+                    {
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+
+        dataMatset = mymat;
+        cout << "The Mat is: " << endl
+             << dataMatset << endl;
     }
 
-    void getBiometricData()
+    long getTotal()
     {
         auto cursor = collection.find({});
+        long total = 0;
+        for (auto &&doc : cursor)
+        {
+            total++;
+        }
+        return total;
+    }
 
+    void increment(Mat newMat)
+    {
+        totalPeople++;
+        dataMatset.push_back(newMat);
+        cout << "The new DataMatSet is: " << endl
+            << dataMatset << endl;
+        updateIndex();
+    }
+
+    void makeRange(Mat indexMat)
+    {
+        int index = 0;
+
+        for (int i=0; i<dataMatset.rows; i++){
+            cout << "an element: " << (i+1) << endl;
+            cv::Mat diff = dataMatset.row(i) != indexMat;
+            if(cv::countNonZero(diff) == 0){
+                index = i;
+                break;
+            }
+        }
+
+        totalPeople--;
+
+        Mat newRangeMat;
+
+        if(index == 0){
+            cv::Range range(1, dataMatset.rows);
+             Mat_<double> tempMat(dataMatset, range);
+             newRangeMat.push_back(tempMat);
+
+        }else if(index == dataMatset.rows-1){
+            cv::Range range(0, dataMatset.rows-1);
+             Mat_<double> tempMat(dataMatset, range);
+             newRangeMat.push_back(tempMat);
+
+        }else{
+            cv::Range range(0, index);
+            cv::Range range2(index+1, dataMatset.rows);
+            Mat_<double> tempMat(dataMatset, range);
+            Mat_<double> tempMat2(dataMatset, range2);
+            newRangeMat.push_back(tempMat);
+            newRangeMat.push_back(tempMat2);
+        }
+        
+        dataMatset = newRangeMat;
+        cout
+            << "The new DataMatSet is: " << endl
+            << dataMatset << endl;
+        
+
+        updateIndex();
+    }
+
+    Mat getMatById(string id){
+        bsoncxx::builder::stream::document filter;
+        filter << "studentId" << id;
+        auto cursor = collection.find({filter.view()});
+        vector<float> tempVector;
+        Mat myMat;
         for (auto &&doc : cursor)
         {
             bsoncxx::document::element bio_element{doc["biometricData "]};
             if (bio_element)
             {
                 auto arr = bio_element.get_array();
-                cout << bsoncxx::to_json(arr.value) << endl
-                     << endl;
+
+                for (int i = 0; i < arr.value.length(); i++)
+                {
+                    try
+                    {
+                        float tempVal = (float)arr.value[i].get_double();
+                        tempVector.push_back(tempVal);
+                    }
+                    catch (exception e)
+                    {
+                        break;
+                    }
+                }
+                myMat = vectorToMat(1, tempVector.size(), tempVector);
             }
         }
+        return myMat;
     }
 
-    //It is called every time you add or delete a person in the db
-    void updateDataSet(bool upOrdel)
-    { //true = createPerson() ;  false = deletePerson();
-        if (upOrdel)
+    string getNameByBiometricData(vector<float> myvector)
+    {
+
+        bsoncxx::builder::stream::document filter;
+
+        auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
+        for (int i = 0; i < myvector.size(); i++)
         {
-            totalPeople++;
+            array << myvector[i];
         }
-        else
+        array << bsoncxx::builder::stream::close_array;
+
+        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+            collection.find_one(filter.view());
+        if (maybe_result)
         {
-            totalPeople--;
+             
+            d.Parse(bsoncxx::to_json(*maybe_result).c_str());
+            Value& val = d["name"];
+            string name = val.GetString();
+            return name;
         }
-        makeDataSet();
-        dataMatset = vectorToMat(totalPeople, dataset.size(), dataset);
+        return "NULL";
+    }
+
+    string getNameByBiometricData(Mat matSearch)
+    {
+
+        bsoncxx::builder::stream::document filter;
+        vector<float> myvector = matToVector(matSearch);
+        auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
+        for (int i = 0; i < myvector.size(); i++)
+        {
+            array << myvector[i];
+        }
+        array << bsoncxx::builder::stream::close_array;
+
+        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+            collection.find_one(filter.view());
+        if (maybe_result)
+        {
+            d.Parse(bsoncxx::to_json(*maybe_result).c_str());
+            Value& val = d["name"];
+            string name = val.GetString();
+            return name;
+        }
+        return "NULL";
+    }
+
+    // to retrieve person from DB
+    string getNameById(string id)
+    {
+        bsoncxx::builder::stream::document filter;
+
+        filter << "studentId" << id;
+
+        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+            collection.find_one(filter.view());
+        if (maybe_result)
+        {
+            d.Parse(bsoncxx::to_json(*maybe_result).c_str());
+            Value& val = d["name"];
+            return val.GetString();
+        }
+        return "NULL";
     }
 
     //to insert person in DB without photo
@@ -104,7 +278,8 @@ public:
         {
             document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender;
             collection.insert_one(document.view());
-            updateDataSet(true);
+            Mat null;
+            increment(null);
         }
     }
 
@@ -115,7 +290,8 @@ public:
         {
             document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "imageUrl" << imageURL;
             collection.insert_one(document.view());
-            updateDataSet(true);
+            Mat null;
+            increment(null);
         }
     }
 
@@ -135,7 +311,7 @@ public:
             array << bsoncxx::builder::stream::close_array;
 
             collection.insert_one(document.view());
-            updateDataSet(true);
+            increment(mymat);
         }
     }
 
@@ -156,17 +332,26 @@ public:
             array << bsoncxx::builder::stream::close_array;
 
             collection.insert_one(document.view());
-            updateDataSet(true);
+            increment(mymat);
         }
     }
 
     void deletePersonById(string id)
     {
-        bsoncxx::builder::stream::document filter;
-
-        filter << "studentId" << id;
-        collection.delete_one(filter.view());
-        updateDataSet(false);
+        
+        Mat deletedMat = getMatById(id);
+        cout << "the deleted Mat is: " << deletedMat << endl;
+        if(deletedMat.rows != 0){
+            makeRange(deletedMat);
+            bsoncxx::builder::stream::document filter;
+            filter << "studentId" << id;
+            collection.delete_one(filter.view());
+            
+        }
+        else{
+            cout << "no existe el usuario y no borre nada" << endl;
+        }
+        
     }
 
     void saveImage(Mat image, string fileName)
@@ -214,83 +399,11 @@ public:
         collection.update_one(filter.view(), update.view());
     }
 
-    string getPersonByBiometricData(vector<float> myvector)
-    {
-
-        bsoncxx::builder::stream::document filter;
-
-        auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
-        for (int i = 0; i < myvector.size(); i++)
-        {
-            array << myvector[i];
-        }
-        array << bsoncxx::builder::stream::close_array;
-
-        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-            collection.find_one(filter.view());
-        if (maybe_result)
-        {
-            return bsoncxx::to_json(*maybe_result);
-        }
-        return "Not person found";
-    }
-
-    string getPersonByBiometricData(Mat matSearch)
-    {
-
-        bsoncxx::builder::stream::document filter;
-        vector<float> myvector = matToVector(matSearch);
-        auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
-        for (int i = 0; i < myvector.size(); i++)
-        {
-            array << myvector[i];
-        }
-        array << bsoncxx::builder::stream::close_array;
-
-        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-            collection.find_one(filter.view());
-        if (maybe_result)
-        {
-            return bsoncxx::to_json(*maybe_result);
-        }
-        return "Not person found";
-    }
-
-    // to retrieve person from DB
-    string getPersonById(string id)
-    {
-        bsoncxx::builder::stream::document filter;
-
-        filter << "studentId" << id;
-
-        bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-            collection.find_one(filter.view());
-        if (maybe_result)
-        {
-            return bsoncxx::to_json(*maybe_result);
-        }
-        return "Not person found";
-    }
-
     vector<float> matToVector(Mat mymat)
     {
         vector<float> normalVector;
         normalVector.assign((float *)mymat.datastart, (float *)mymat.dataend);
         return normalVector;
-
-        // This is just to confirm
-
-        // int cnt=0;
-        // int r = 1;
-        // int c = normalVector.size();
-        // for(int i=0; i< c; ++i)
-        // {
-        //     for(int j=0; j< r; ++j) {
-        //         printf("%lf ", normalVector[cnt++]);
-        //         printf("\n");
-        //     }
-
-        // }
     }
 
     Mat vectorToMat(long rows, long col, vector<float> vtest)
@@ -298,37 +411,8 @@ public:
         Mat mymat = Mat(rows, col, CV_32FC1); // Mat(row, columns, type);
         memcpy(mymat.data, vtest.data(), vtest.size() * sizeof(float));
         return mymat;
-
-        //ANOTHER WAY
-        // double vtest2[5] = {-0.116467, 0.0991249, 0.0624924, 0.00583552, -0.0165893};
-        // Mat mymat = Mat(5, 5, CV_64FC1, vtest2).clone();
     }
 
-    vector<string> returnData()
-    {
-        auto cursor = collection.find({});
-
-        cout << "matriz 2" << endl
-             << endl;
-        vector<string> matrix;
-        for (auto &&doc : cursor)
-        {
-            string json = bsoncxx::to_json(doc);
-            matrix.push_back(json);
-        }
-        return matrix;
-    }
-
-    long getTotal()
-    {
-        auto cursor = collection.find({});
-        long total = 0;
-        for (auto &&doc : cursor)
-        {
-            total++;
-        }
-        return total;
-    }
     //Print all documents in DB
     void printDB()
     {
@@ -344,6 +428,10 @@ public:
         }
     }
 
+
+
+
+    /* ALTERNATIVE KNNSEARCH 
     double distance(vector<float> p, vector<float> q)
     {
         double d = 0;
@@ -373,12 +461,12 @@ public:
 
         for (auto &&doc : cursor)
         {
-            vector<float> tempVector;
+
             bsoncxx::document::element bio_element{doc["biometricData "]};
             if (bio_element)
             {
                 auto arr = bio_element.get_array();
-
+                vector<float> tempVector;
                 for (int i = 0; i < arr.value.length(); i++)
                 {
                     try
@@ -420,5 +508,6 @@ public:
             }
         }
         return result;
-    }
+    } 
+    */ 
 };
