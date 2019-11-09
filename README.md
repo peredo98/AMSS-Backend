@@ -120,54 +120,60 @@ The `test.cpp` file is the main file.
 
   > db.deletePersonById("A01234567");
 
-- Get a person related to its description vector on vector<float> format
+- Get a person's name related to its description vector on vector<float> format
 
   > vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494};
   >
-  > string json = db.getPersonByBiometricData(vSearch);
+  > string name = db.getPersonByBiometricData(vSearch);
   >
-  > d.Parse(json.c_str());
+  > if(name != "NULL"){
   >
-  > Value& val = d["name"];
+  > cout << "The person's name is: " << name << endl;
   >
-  > printf("%s\n", val.GetString());
+  > }
 
-- Get a person related to its description vector on Mat format
+- Get a person's name related to its description vector on Mat format
 
   > vector<float> vSearch = {-0.0576136, 0.171748, 0.0571629, -0.152391, -0.166514};
   >
   > Mat matSearch = db.vectorToMat(1, vSearch.size() ,vSearch);
   >
-  > string jsonM = db.getPersonByBiometricData(matSearch);
+  > string name = db.getPersonByBiometricData(matSearch);
   >
-  > d.Parse(jsonM.c_str());
+  > if(name != "NULL"){
   >
-  > Value& valM = d["name"];
+  > cout << "The person's name is: " << name << endl;
   >
-  > printf("%s\n", valM.GetString());
+  > }
+
+- Get the biometric data of a person based on its ID
+
+  > Mat mymat = db.getMatById("A01025599");
+  >
+  > if(mymat.rows != 0){
+  >
+  > cout << "The mat of the person you look for is: " << mymat << endl;
+  >
+  > }
+
+- Get the person's name based on its ID
+
+  > string name = db.getNameById("A01024192");
+  >
+  > if(name != "NULL"){
+  >
+  > cout << "The person's name is: " << name << endl;
+  >
+  > }
 
 - Get the description vector of the four persons most alike to someone
 
-  > vector<float> vSearch = {-0.077756, 0.192846, 0.0550688, -0.168125, -0.182494}; //Vector of the person you are looking for.
+  > vector<float> vSearch = {-0.076754, 0.0851077, 0.00011571, -0.072535, -0.114122};
   >
   > Mat matSearch = db.vectorToMat(1, vSearch.size(), vSearch);
   >
-  > vector<Mat> result = db.searchPersonKnn(matSearch, 4);
-  >
-  > for (int i = 0; i < result.size(); i++){
-  >
-  > vector<float> tempVector = db.matToVector(result[i]);
-  >
-  > for (int j = 0; j < tempVector.size(); j++){
-  >
-  > printf("%f ", tempVector[j]);
-  > }
-  >
-  > printf("\n");
-  >
-  > }
+  > Mat nearestNeighbors = db.searchPerson(matSearch, 4);
 
 - Print the data base
 
   > db.printDB();
-  > formation to notify if the person is already in the system.
