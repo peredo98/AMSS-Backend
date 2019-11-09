@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ValidateData::ValidateData(){}
+ValidateData::ValidateData() {}
 
 bool ValidateData::validate_all(string name, string lastname, string id, string gender)
 {
