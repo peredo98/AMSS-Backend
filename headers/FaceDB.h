@@ -72,6 +72,8 @@ public:
     //to insert person in DB with biometrics
     void createPerson(string name, string lastName, string id, int age, string gender, cv::Mat mymat);
 
+    void createPerson2(string name, string lastName, string id, int age, string gender, cv::Mat mymat);
+
     //to insert person in DB with photo and biometrics
     void createPerson(string name, string lastName, string id, int age, string gender, string imageURL, cv::Mat mymat);
 
@@ -88,6 +90,10 @@ public:
     vector<float> matToVector(cv::Mat mymat);
 
     cv::Mat vectorToMat(long rows, long col, vector<float> vtest);
+
+    string matToString(cv::Mat mymat);
+
+    cv::Mat stringToMat(string matStr);
 
     //Print all documents in DB
     void printDB();

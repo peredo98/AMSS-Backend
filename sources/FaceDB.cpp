@@ -1,4 +1,6 @@
 #include "./../headers/FaceDB.h"
+// #include <bits/stdc++.h>
+// #include <boost/algorithm/string.hpp>
 
 using namespace std;
 using namespace cv;
@@ -39,7 +41,7 @@ Mat FaceDB::searchPerson(cv::Mat_<float> query, int numKnn)
 void FaceDB::makeDataSet()
 {
 
-    Mat_<double> mymat(totalPeople, 5);
+    Mat_<double> mymat(totalPeople, 128);
 
     int i = 0;
     auto cursor = collection.find({});
@@ -284,6 +286,23 @@ void FaceDB::createPerson(string name, string lastName, string id, int age, stri
     }
 }
 
+//to insert person in DB with biometrics
+void FaceDB::createPerson2(string name, string lastName, string id, int age, string gender, Mat auxMat)
+{
+    if (validateData->validate_all(name, lastName, id, gender))
+    {
+
+        string matStr = matToString(auxMat);
+        // cout << "The mat string is: " << endl
+        //      << matStr << endl;
+
+        document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "biometricData" << matStr;
+        collection.insert_one(document.view());
+
+        increment(auxMat);
+    }
+}
+
 //to insert person in DB with photo and biometrics
 void FaceDB::createPerson(string name, string lastName, string id, int age, string gender, string imageURL, Mat mymat)
 {
@@ -380,6 +399,56 @@ Mat FaceDB::vectorToMat(long rows, long col, vector<float> vtest)
     Mat mymat = Mat(rows, col, CV_32FC1); // Mat(row, columns, type);
     memcpy(mymat.data, vtest.data(), vtest.size() * sizeof(float));
     return mymat;
+}
+
+string FaceDB::matToString(Mat mymat)
+{
+    cout << "i create the mat: " << mymat.cols << endl;
+    string auxStr = "";
+
+    for (int i = 0; i < mymat.cols; i++)
+    {
+        // cout << "i: " << i << ": " << mymat(0, i) << endl;
+        // cout << "i: " << i << ": " << mymat.at<float>(0, i) << endl;
+        float element = mymat.at<float>(0, i);
+        auxStr = auxStr + to_string(element) + " ";
+    }
+    cout << "i stope here" << endl;
+
+    return auxStr;
+}
+
+const vector<float> explode(const string &s, const char &c)
+{
+    string buff{""};
+    vector<float> v;
+
+    for (auto n : s)
+    {
+        if (n != c)
+            buff += n;
+        else if (n == c && buff != "")
+        {
+            v.push_back(stof(buff));
+            buff = "";
+        }
+    }
+    if (buff != "")
+        v.push_back(stof(buff));
+
+    return v;
+}
+
+Mat FaceDB::stringToMat(string matStr)
+{
+    char *pch;
+    printf("Splitting string \"%s\" into tokens:\n", matStr);
+    pch = strtok(matStr, " ,.-");
+    while (pch != NULL)
+    {
+        printf("%s\n", pch);
+        pch = strtok(NULL, " ,.-");
+    }
 }
 
 //Print all documents in DB

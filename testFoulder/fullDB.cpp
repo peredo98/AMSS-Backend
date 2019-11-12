@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include <string>
 #include <string.h>
@@ -88,27 +89,52 @@ std::vector<int> LoadAgeFromTextFile(string filename)
     return features;
 }
 
+std::vector<std::string> LoadIDFromTextFile(string filename)
+{
+    std::ifstream file(filename);
+
+    std::string line;
+
+    std::vector<std::string> features;
+
+    // Read one line at a time into the variable line:
+    while (std::getline(file, line))
+    {
+        string id = line.substr(0, 9);
+        features.push_back(id);
+    }
+
+    return features;
+}
+
 int main(int, char **)
 {
     cout << endl
          << " ** version FULL THE DATABASE **" << endl;
 
     Mat vectors = LoadVectorFromTextFile("Vectores.txt");
-    vector<int> edades = LoadAgeFromTextFile("edades.txt");
-    vector<string> nombres = LoadTextFromTextFile("Nombres.txt");
-    vector<string> apellidos = LoadTextFromTextFile("Apellidos.txt");
-    vector<string> generos = LoadTextFromTextFile("Genero.txt");
-    vector<string> id = LoadTextFromTextFile("Matriculas.txt");
+    // vector<int> edades = LoadAgeFromTextFile("edades.txt");
+    // vector<string> nombres = LoadTextFromTextFile("Nombres.txt");
+    // vector<string> apellidos = LoadTextFromTextFile("Apellidos.txt");
+    // vector<string> generos = LoadTextFromTextFile("Genero.txt");
+    // vector<string> id = LoadIDFromTextFile("Matriculas.txt");
 
-    cout << "the first mat is " << vectors.row(0) << endl;
-    cout << "the first age is " << edades[0] << endl;
-    cout << "the first name is " << nombres[0] << endl;
-    cout << "the first lastname is " << apellidos[0] << endl;
-    cout << "the first gender is " << generos[0] << endl;
-    cout << "the first id is " << id[0] << endl;
+    cout << "the first mat is " << vectors.row(2) << endl;
+    // cout << "the first age is " << edades[0] << endl;
+    // cout << "the first name is " << nombres[0] << endl;
+    // cout << "the first lastname is " << apellidos[0] << endl;
+    // cout << "the first gender is " << generos[0] << endl;
+    // cout << "the first id is " << id[0] << endl;
+
+    Mat a = vectors.row(2);
+    string b = db->matToString(a);
+    Mat be = db->stringToMat(b);
+    cout << "the renew mat is: " << b << endl;
+    // db->createPerson2("name", "apellido", "A01331234", 20, "Male", vectors.row(3));
 
     // for (int i = 0; i < 99999; i++)
     // {
-    //     db->createPerson(nombres[i], apellidos[i], id[i], edades[i], generos[i], vectors[i]);
+    //     db->createPerson(nombres[i], apellidos[i], id[i], edades[i], generos[i], vectors.row(i));
     // }
+    // cout << "YEAH! YOUR DB IS NOW FILL WITH 100,000, GOOD LUCK..." << endl;
 }

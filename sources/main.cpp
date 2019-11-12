@@ -32,7 +32,7 @@ int main(int, char **)
 
     // /* DELETE A PERSON BASED ON ITS ID */
     // cout << "delete a person" << endl;
-    // db->deletePersonById("A01330192");
+    // db->deletePersonById("A01338798");
 
     // /* GET PERSON'S NAME BY STUDENT ID */
     // string name =  db->getNameById("A01024192");
