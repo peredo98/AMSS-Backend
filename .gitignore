@@ -31,5 +31,6 @@
 *.out
 *.app
 
-headers/descr_imprv_ytf.txt
+descr_imprv_ytf.txt
 vcpkg/
+Vectores.txt
