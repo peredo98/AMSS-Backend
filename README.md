@@ -74,8 +74,8 @@ Open your terminal and run the following commands to install de dependencies.
 
 prerequisites:
     
-    - **Visual Studio Community 2019**
-    - **Visual Studio English Language Pack 2019**
+    - Visual Studio Community 2019
+    - Visual Studio English Language Pack 2019
     
 First, you need to install vckpg 2019.10 
 
@@ -121,6 +121,15 @@ The `main.cpp` file is the main file.
    
    On your solution explorer view right click on your solution and select properties:
    
+   ![alt text](https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.29.52.png)
+   
+   Go to Configuration properties, in Linker, and in System select the Console(/SUBSYSTEM:CONSOLE) as subsystem, and click on the apply button:
+   
+   ![alt text](https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.32.20.png)
+   
+   In the debug tab click on Start without debbuging and the project should run:
+   
+   ![alt text](https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.32.51.png)
    
 
 # Methods
