@@ -73,14 +73,13 @@ Open your terminal and run the following commands to install de dependencies.
 - **Windows**
 
 prerequisites:
-    
-    - Visual Studio Community 2019
-    - Visual Studio English Language Pack 2019
-    
-First, you need to install vckpg 2019.10 
+
+- Visual Studio Community 2019 - Visual Studio English Language Pack 2019
+
+First, you need to install vckpg 2019.10
 
     https://github.com/microsoft/vcpkg/archive/2019.10.zip
-    
+
 Then, you must extract the zip and open the extracted directory on the command prompt and enter the following commands:
 
     .\bootstrap-vcpkg.bat
@@ -97,7 +96,19 @@ In the main class its is needed to import only the class `FaceDB.cpp` and instan
 FaceDB *db = new FaceDB();
 ```
 
-Also, it needed to download all the .cpp in the `sources` folder and the .h files in the `headers`folder and leave the in the same directory to the project work as it should.
+Also, it needed to download all the .cpp in the `sources` folder and the .h files in the `headers`folder and leave the in the same directory to the projects work as it should.
+
+### Fill the database
+
+To fill your local database you need to do the following steps:
+
+1. Download the Vectors.txt from <https://drive.google.com/file/d/1PvNtaSKuFYAo1ZC5dKNNMdLr9eAO0UcT/view> and put it in the `testFoulder` folder.
+
+2. Compile and run the `fullDB.cpp` file. It will take a few minutes, don't worry.
+
+Now, you should have stored 100,000 people with name, lastname, age, id, gender, a descriptor vector and its image.
+
+This must to be done **ONLY ONCE**, so you can forget about this once you're done.
 
 # Compilation
 
@@ -117,20 +128,19 @@ The `main.cpp` file is the main file.
 
 * **Windows**
 
-   Open Visual Studio 2019 and make a new solution with existing code.
-   
-   On your solution explorer view right click on your solution and select properties:
-   
-   ![alt text](https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.29.52.png)
-   
-   Go to Configuration properties, in Linker, and in System select the Console(/SUBSYSTEM:CONSOLE) as subsystem, and click on the apply button:
-   
-   ![alt text](https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.32.20.png)
-   
-   In the debug tab click on Start without debbuging and the project should run:
-   
-   ![alt text](https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.32.51.png)
-   
+  Open Visual Studio 2019 and make a new solution with existing code.
+
+  On your solution explorer view right click on your solution and select properties:
+
+  ![alt text](<https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.29.52.png>)
+
+  Go to Configuration properties, in Linker, and in System select the Console(/SUBSYSTEM:CONSOLE) as subsystem, and click on the apply button:
+
+  ![alt text](<https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.32.20.png>)
+
+  In the debug tab click on Start without debbuging and the project should run:
+
+  ![alt text](<https://github.com/peredo98/AMSS-Backend/blob/master/img/Captura%20de%20Pantalla%202019-11-11%20a%20la(s)%2018.32.51.png>)
 
 # Methods
 
