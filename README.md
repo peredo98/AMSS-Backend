@@ -62,27 +62,31 @@ Open your terminal and run the following commands to install de dependencies.
 
     brew tap mongodb/brew
 
-    brew install mongodb
-
     brew install mongodb-community
 
     brew install mongo-cxx-driver
 
     brew services start mongodb-community
 
-    brew install pkg-config
-
-    brew tap nlohmann/json
-
-    brew install nlohmann-json
-
-    brew tap cuber/homebrew-jsoncpp
-
-    brew install jsoncpp
-
 <br>
 
 - **Windows**
+
+prerequisites:
+    
+    - **Visual Studio Community 2019**
+    - **Visual Studio English Language Pack 2019**
+    
+First, you need to install vckpg 2019.10 
+
+    https://github.com/microsoft/vcpkg/archive/2019.10.zip
+    
+Then, you must extract the zip and open the extracted directory on the command prompt and enter the following commands:
+
+    .\bootstrap-vcpkg.bat
+    .\vcpkg.exe install mongo-cxx-driver
+    .\vcpkg.exe install opencv
+    .\vcpkg.exe integrate install
 
 # Start
 
@@ -112,6 +116,12 @@ The `main.cpp` file is the main file.
   > ./main
 
 * **Windows**
+
+   Open Visual Studio 2019 and make a new solution with existing code.
+   
+   On your solution explorer view right click on your solution and select properties:
+   
+   
 
 # Methods
 
