@@ -14,8 +14,11 @@ IndexSearch::IndexSearch()
 
 void IndexSearch::updateIndex(cv::Mat_<float> dataset)
 {
-    cout << "Update the index..." << endl;
-    index.build(dataset, flann::KDTreeIndexParams());
+    // cout << "Update the index..." << endl;
+    if(dataset.rows != 0){
+        index.build(dataset, flann::KDTreeIndexParams());
+    }
+    
     cout << "done " << dataset.rows << " " << dataset.cols << endl;
 }
 

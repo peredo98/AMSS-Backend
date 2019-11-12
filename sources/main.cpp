@@ -28,11 +28,11 @@ int main(int, char **)
     /* CREATE A PERSON WITH BIOMETRIC DATA  */
     // vector<float> vtest = {-0.076754, 0.0851077, 0.00011571, -0.072535, -0.114122};
     // Mat mymat = db->vectorToMat(1, vtest.size(), vtest);
-    // db->createPerson("Oscar", "Ruiz", "A01330192", 25, "Male", mymat);
+    // db->createPerson2("ruben", "slazar", "A01338798", 25, "Male", {-0.03334, 0.0851077, 0.00011571, -0.072535, -0.114122});
 
     // /* DELETE A PERSON BASED ON ITS ID */
     // cout << "delete a person" << endl;
-    // db->deletePersonById("A01338798");
+    // db->deletePersonById("A01330192");
 
     // /* GET PERSON'S NAME BY STUDENT ID */
     // string name =  db->getNameById("A01024192");
@@ -62,12 +62,12 @@ int main(int, char **)
     // }
 
     /* SEARCH IN DB -- A PERSON PASSES  */
-    vector<float> vSearch = {-0.076754, 0.0851077, 0.00011571, -0.072535, -0.114122};
-    Mat matSearch = db->vectorToMat(1, vSearch.size(), vSearch);
-    Mat nearestNeighbors = db->searchPerson(matSearch, 4);
+    // vector<float> vSearch = {-0.076754, 0.0851077, 0.00011571, -0.072535, -0.114122};
+    // Mat matSearch = db->vectorToMat(1, vSearch.size(), vSearch);
+    // Mat nearestNeighbors = db->searchPerson(matSearch, 4);
 
     //PRINTDB
-    // db->printDB();
+    db->printDB();
 
     //ALTERNATIVE KNNSEARCH
     /*

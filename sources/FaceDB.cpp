@@ -87,8 +87,8 @@ void FaceDB::increment(Mat newMat)
 {
     totalPeople++;
     dataMatset.push_back(newMat);
-    cout << "The new DataMatSet is: " << endl
-         << dataMatset << endl;
+    // cout << "The new DataMatSet is: " << endl
+    //      << dataMatset << endl;
     updateIndex();
 }
 
@@ -134,9 +134,9 @@ void FaceDB::makeRange(Mat indexMat)
     }
 
     dataMatset = newRangeMat;
-    cout
-        << "The new DataMatSet is: " << endl
-        << dataMatset << endl;
+    // cout
+    //     << "The new DataMatSet is: " << endl
+    //     << dataMatset << endl;
 
     updateIndex();
 }
