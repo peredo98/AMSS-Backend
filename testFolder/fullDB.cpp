@@ -3,7 +3,11 @@
 
 #include <string>
 #include <string.h>
+#include <stdlib.h>
 
+#include <chrono>
+#include <thread>
+#include <unistd.h>
 #include <regex>
 
 #include <bsoncxx/builder/stream/document.hpp>
@@ -107,34 +111,26 @@ std::vector<std::string> LoadIDFromTextFile(string filename)
     return features;
 }
 
-int main(int, char **)
+int main()
 {
     cout << endl
          << " ** version FULL THE DATABASE **" << endl;
 
     Mat vectors = LoadVectorFromTextFile("Vectores.txt");
-    // vector<int> edades = LoadAgeFromTextFile("edades.txt");
-    // vector<string> nombres = LoadTextFromTextFile("Nombres.txt");
-    // vector<string> apellidos = LoadTextFromTextFile("Apellidos.txt");
-    // vector<string> generos = LoadTextFromTextFile("Genero.txt");
-    // vector<string> id = LoadIDFromTextFile("Matriculas.txt");
+    vector<int> edades = LoadAgeFromTextFile("edades.txt");
+    vector<string> nombres = LoadTextFromTextFile("Nombres.txt");
+    vector<string> apellidos = LoadTextFromTextFile("Apellidos.txt");
+    vector<string> generos = LoadTextFromTextFile("Genero.txt");
+    vector<string> id = LoadIDFromTextFile("Matriculas.txt");
 
-    cout << "the first mat is " << vectors.row(2) << endl;
-    // cout << "the first age is " << edades[0] << endl;
-    // cout << "the first name is " << nombres[0] << endl;
-    // cout << "the first lastname is " << apellidos[0] << endl;
-    // cout << "the first gender is " << generos[0] << endl;
-    // cout << "the first id is " << id[0] << endl;
+    cout << "the size mat is " << vectors.rows << endl;
+    cout << "the size age is " << edades.size() << endl;
+    cout << "the size name is " << nombres.size() << endl;
+    cout << "the size lastname is " << apellidos.size() << endl;
+    cout << "the size gender is " << generos.size() << endl;
+    cout << "the size id is " << id.size() << endl;
 
-    Mat a = vectors.row(2);
-    string b = db->matToString(a);
-    Mat be = db->stringToMat(b);
-    cout << "the renew mat is: " << b << endl;
-    // db->createPerson2("name", "apellido", "A01331234", 20, "Male", vectors.row(3));
-
-    // for (int i = 0; i < 99999; i++)
-    // {
-    //     db->createPerson(nombres[i], apellidos[i], id[i], edades[i], generos[i], vectors.row(i));
-    // }
-    // cout << "YEAH! YOUR DB IS NOW FILL WITH 100,000, GOOD LUCK..." << endl;
+    // db->insertMany(nombres, apellidos, id, edades, generos, vectors);
+    cout << "listo" << endl;
+    cout << "YEAH! YOUR DB IS NOW FILLED WITH 100,000, GOOD LUCK..." << endl;
 }

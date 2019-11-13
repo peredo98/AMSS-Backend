@@ -5,6 +5,7 @@
 using namespace std;
 using namespace cv;
 using namespace rapidjson;
+using bsoncxx::builder::stream::finalize;
 
 FaceDB::FaceDB()
 {
@@ -32,7 +33,7 @@ Mat FaceDB::searchPerson(cv::Mat_<float> query, int numKnn)
     for (int i = 0; i < numKnn; i++)
     {
         Mat neigh = dataMatset.row(indices.at<int>(0, i));
-        cout << neigh << endl;
+        // cout << neigh << endl;
         nearestNeighbors.push_back(neigh);
     }
     return nearestNeighbors;
@@ -41,37 +42,85 @@ Mat FaceDB::searchPerson(cv::Mat_<float> query, int numKnn)
 void FaceDB::makeDataSet()
 {
 
-    Mat_<double> mymat(totalPeople, 128);
+    // Mat_<double> mymat(totalPeople, 128);
+
+    // int i = 0;
+    // auto cursor = collection.find({});
+    // for (auto &&doc : cursor)
+    // {
+    //     bsoncxx::document::element bio_element{doc["biometricData "]};
+    //     if (bio_element)
+    //     {
+    //         vector<float> tempVector;
+    //         auto arr = bio_element.get_array();
+    //         for (int j = 0; j < arr.value.length(); j++)
+    //         {
+    //             try
+    //             {
+    //                 float tempVal = (float)arr.value[j].get_double();
+    //                 tempVector.push_back(tempVal);
+    //                 mymat(i, j) = tempVal;
+    //             }
+    //             catch (exception e)
+    //             {
+    //                 break;
+    //             }
+    //         }
+    //         i++;
+    //     }
+    // }
+
+    // Mat_<double> mymat(totalPeople, 128);
 
     int i = 0;
     auto cursor = collection.find({});
     for (auto &&doc : cursor)
     {
-        bsoncxx::document::element bio_element{doc["biometricData "]};
-        if (bio_element)
-        {
-            vector<float> tempVector;
-            auto arr = bio_element.get_array();
-            for (int j = 0; j < arr.value.length(); j++)
-            {
-                try
-                {
-                    float tempVal = (float)arr.value[j].get_double();
-                    tempVector.push_back(tempVal);
-                    mymat(i, j) = tempVal;
-                }
-                catch (exception e)
-                {
-                    break;
-                }
-            }
-            i++;
-        }
+
+        // bsoncxx::document::element bio_element{doc["biometricData "]};
+        string json = bsoncxx::to_json(doc);
+        // cout << "entro aqui" << endl
+        //      << json << endl;
+
+        d.Parse(json.c_str());
+        Value &val = d["biometricData"];
+        string matStr = val.GetString();
+        // std::cout << matStr << endl;
+
+        Mat auxMat = stringToMat(matStr);
+        dataMatset.push_back(auxMat);
+
+        i++;
+
+        // if (bio_element)
+        // {
+
+        //     string json = bsoncxx::to_json(doc);
+        //     cout << "entro aqui" << endl
+        //          << json << endl;
+        //     // d.Parse(bsoncxx::to_json(&bio_element).c_str());
+        //     // vector<float> tempVector;
+        //     // auto arr = bio_element.get_array();
+        //     // for (int j = 0; j < arr.value.length(); j++)
+        //     // {
+        //     //     try
+        //     //     {
+        //     //         float tempVal = (float)arr.value[j].get_double();
+        //     //         tempVector.push_back(tempVal);
+        //     //         mymat(i, j) = tempVal;
+        //     //     }
+        //     //     catch (exception e)
+        //     //     {
+        //     //         break;
+        //     //     }
+        //     // }
+        //     // i++;
+        // }
     }
 
-    dataMatset = mymat;
-    cout << "The Mat is: " << endl
-         << dataMatset << endl;
+    // dataMatset = mymat;
+    // cout << "The Mat is: " << endl
+    //      << dataMatset << endl;
 }
 
 long FaceDB::getTotal()
@@ -100,7 +149,6 @@ void FaceDB::makeRange(Mat indexMat)
 
     for (int i = 0; i < dataMatset.rows; i++)
     {
-        cout << "an element: " << (i + 1) << endl;
         cv::Mat diff = dataMatset.row(i) != indexMat;
         if (cv::countNonZero(diff) == 0)
         {
@@ -136,9 +184,6 @@ void FaceDB::makeRange(Mat indexMat)
     }
 
     dataMatset = newRangeMat;
-    // cout
-    //     << "The new DataMatSet is: " << endl
-    //     << dataMatset << endl;
 
     updateIndex();
 }
@@ -146,47 +191,66 @@ void FaceDB::makeRange(Mat indexMat)
 Mat FaceDB::getMatById(string id)
 {
     bsoncxx::builder::stream::document filter;
-    filter << "studentId" << id;
-    auto cursor = collection.find({filter.view()});
-    vector<float> tempVector;
-    Mat myMat;
-    for (auto &&doc : cursor)
-    {
-        bsoncxx::document::element bio_element{doc["biometricData "]};
-        if (bio_element)
-        {
-            auto arr = bio_element.get_array();
 
-            for (int i = 0; i < arr.value.length(); i++)
-            {
-                try
-                {
-                    float tempVal = (float)arr.value[i].get_double();
-                    tempVector.push_back(tempVal);
-                }
-                catch (exception e)
-                {
-                    break;
-                }
-            }
-            myMat = vectorToMat(1, tempVector.size(), tempVector);
-        }
+    filter << "studentId" << id;
+    Mat mymat;
+    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+        collection.find_one(filter.view());
+    if (maybe_result)
+    {
+        d.Parse(bsoncxx::to_json(*maybe_result).c_str());
+        Value &val = d["biometricData"];
+        string matStr = val.GetString();
+        mymat = stringToMat(matStr);
     }
-    return myMat;
+    return mymat;
+
+    // bsoncxx::builder::stream::document filter;
+    // filter << "studentId" << id;
+    // auto cursor = collection.find({filter.view()});
+    // vector<float> tempVector;
+    // Mat myMat;
+    // for (auto &&doc : cursor)
+    // {
+    //     bsoncxx::document::element bio_element{doc["biometricData "]};
+    //     if (bio_element)
+    //     {
+    //         auto arr = bio_element.get_array();
+
+    //         for (int i = 0; i < arr.value.length(); i++)
+    //         {
+    //             try
+    //             {
+    //                 float tempVal = (float)arr.value[i].get_double();
+    //                 tempVector.push_back(tempVal);
+    //             }
+    //             catch (exception e)
+    //             {
+    //                 break;
+    //             }
+    //         }
+    //         myMat = vectorToMat(1, tempVector.size(), tempVector);
+    //     }
+    // }
+    // return myMat;
 }
 
 string FaceDB::getNameByBiometricData(vector<float> myvector)
 {
 
+    Mat mymat = vectorToMat(1, myvector.size(), myvector);
+    string matStr = matToString(mymat);
+
     bsoncxx::builder::stream::document filter;
 
-    auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
-    for (int i = 0; i < myvector.size(); i++)
-    {
-        array << myvector[i];
-    }
-    array << bsoncxx::builder::stream::close_array;
+    // auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
+    // for (int i = 0; i < myvector.size(); i++)
+    // {
+    //     array << myvector[i];
+    // }
+    // array << bsoncxx::builder::stream::close_array;
 
+    auto array = filter << "biometricData " << matStr;
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
         collection.find_one(filter.view());
     if (maybe_result)
@@ -204,14 +268,15 @@ string FaceDB::getNameByBiometricData(Mat matSearch)
 {
 
     bsoncxx::builder::stream::document filter;
-    vector<float> myvector = matToVector(matSearch);
-    auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
-    for (int i = 0; i < myvector.size(); i++)
-    {
-        array << myvector[i];
-    }
-    array << bsoncxx::builder::stream::close_array;
-
+    // vector<float> myvector = matToVector(matSearch);
+    // auto array = filter << "biometricData " << bsoncxx::builder::stream::open_array;
+    // for (int i = 0; i < myvector.size(); i++)
+    // {
+    //     array << myvector[i];
+    // }
+    // array << bsoncxx::builder::stream::close_array;
+    string matStr = matToString(matSearch);
+    auto array = filter << "biometricData " << matStr;
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
         collection.find_one(filter.view());
     if (maybe_result)
@@ -286,21 +351,19 @@ void FaceDB::createPerson(string name, string lastName, string id, int age, stri
     }
 }
 
-//to insert person in DB with biometrics
-void FaceDB::createPerson2(string name, string lastName, string id, int age, string gender, Mat auxMat)
+void FaceDB::insertMany(vector<string> name, vector<string> lastName, vector<string> id, vector<int> age, vector<string> gender, Mat auxMat)
 {
-    if (validateData->validate_all(name, lastName, id, gender))
+    std::vector<bsoncxx::document::value> documents;
+
+    for (int i = 0; i < 100000; i++)
     {
-
-        string matStr = matToString(auxMat);
-        // cout << "The mat string is: " << endl
-        //      << matStr << endl;
-
-        document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "biometricData" << matStr;
-        collection.insert_one(document.view());
-
-        increment(auxMat);
+        string matStr = "";
+        matStr = matToString(auxMat.row(i));
+        documents.push_back(
+            bsoncxx::builder::stream::document{} << "name" << name[i] << "lastName" << lastName[i] << "studentId" << id[i] << "age" << age[i] << "gender" << gender[i] << "biometricData" << matStr << finalize);
     }
+    collection.insert_many(documents);
+    cout << "Inserte 100,000 " << endl;
 }
 
 //to insert person in DB with photo and biometrics
@@ -335,11 +398,26 @@ void FaceDB::deletePersonById(string id)
         bsoncxx::builder::stream::document filter;
         filter << "studentId" << id;
         collection.delete_one(filter.view());
+        cout << "BORRADO EXITOSO" << endl;
     }
     else
     {
         cout << "no existe el usuario y no borre nada" << endl;
     }
+}
+
+void FaceDB::deleteAll()
+{
+    // bsoncxx::builder::stream::document filter;
+    // filter << "gender"
+    //        << "Female";
+
+    // collection.delete_many(filter.view());
+
+    // filter << "gender"
+    //        << "Male";
+
+    // collection.delete_many(filter.view());
 }
 
 void FaceDB::saveImage(Mat image, string fileName)
@@ -403,7 +481,7 @@ Mat FaceDB::vectorToMat(long rows, long col, vector<float> vtest)
 
 string FaceDB::matToString(Mat mymat)
 {
-    cout << "i create the mat: " << mymat.cols << endl;
+    // cout << "i create the mat: " << mymat.cols << endl;
     string auxStr = "";
 
     for (int i = 0; i < mymat.cols; i++)
@@ -413,42 +491,26 @@ string FaceDB::matToString(Mat mymat)
         float element = mymat.at<float>(0, i);
         auxStr = auxStr + to_string(element) + " ";
     }
-    cout << "i stope here" << endl;
-
     return auxStr;
 }
 
-const vector<float> explode(const string &s, const char &c)
+Mat FaceDB::stringToMat(string s)
 {
-    string buff{""};
-    vector<float> v;
-
-    for (auto n : s)
+    std::string delimiter = " ";
+    vector<float> auxVec;
+    size_t pos = 0;
+    std::string token;
+    while ((pos = s.find(delimiter)) != std::string::npos)
     {
-        if (n != c)
-            buff += n;
-        else if (n == c && buff != "")
-        {
-            v.push_back(stof(buff));
-            buff = "";
-        }
+        token = s.substr(0, pos);
+        // cout << "the token is: ";
+        // std::cout << token << std::endl;
+        auxVec.push_back(std::stof(token));
+        s.erase(0, pos + delimiter.length());
     }
-    if (buff != "")
-        v.push_back(stof(buff));
-
-    return v;
-}
-
-Mat FaceDB::stringToMat(string matStr)
-{
-    char *pch;
-    printf("Splitting string \"%s\" into tokens:\n", matStr);
-    pch = strtok(matStr, " ,.-");
-    while (pch != NULL)
-    {
-        printf("%s\n", pch);
-        pch = strtok(NULL, " ,.-");
-    }
+    // std::cout << "The length of the vector is" << auxVec.size() << std::endl;
+    Mat mymat = vectorToMat(1, auxVec.size(), auxVec);
+    return mymat;
 }
 
 //Print all documents in DB

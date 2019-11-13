@@ -34,3 +34,5 @@
 descr_imprv_ytf.txt
 vcpkg/
 Vectores.txt
+metodologiaImg.cpp
+utils.cpp

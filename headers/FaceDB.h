@@ -72,12 +72,14 @@ public:
     //to insert person in DB with biometrics
     void createPerson(string name, string lastName, string id, int age, string gender, cv::Mat mymat);
 
-    void createPerson2(string name, string lastName, string id, int age, string gender, cv::Mat mymat);
+    void insertMany(vector<string> name, vector<string> lastName, vector<string> id, vector<int> age, vector<string> gender, Mat auxMat);
 
     //to insert person in DB with photo and biometrics
     void createPerson(string name, string lastName, string id, int age, string gender, string imageURL, cv::Mat mymat);
 
     void deletePersonById(string id);
+
+    void deleteAll();
 
     void saveImage(cv::Mat image, string fileName);
 

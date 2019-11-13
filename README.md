@@ -102,9 +102,9 @@ Also, it needed to download all the .cpp in the `sources` folder and the .h file
 
 To fill your local database you need to do the following steps:
 
-1. Download the Vectors.txt from <https://drive.google.com/file/d/1PvNtaSKuFYAo1ZC5dKNNMdLr9eAO0UcT/view> and put it in the `testFoulder` folder.
+1. Download the Vectors.txt from <https://drive.google.com/file/d/1PvNtaSKuFYAo1ZC5dKNNMdLr9eAO0UcT/view> and put it in the `testFolder` folder.
 
-2. Compile and run the `fullDB.cpp` file. It will take a few minutes, don't worry.
+2. Compile and run the `fullDB.cpp` file inside the same folder than above. It will take a minute, don't worry.
 
 Now, you should have stored 100,000 people with name, lastname, age, id, gender, a descriptor vector and its image.
 
