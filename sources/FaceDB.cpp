@@ -235,7 +235,7 @@ Mat FaceDB::getMatById(string id)
     // return myMat;
 }
 
-string FaceDB::getNameByBiometricData(vector<float> myvector)
+string FaceDB::getNameByBiometricData(vector<float> myvector) // Creo que ya no deberia de servir
 {
 
     Mat mymat = vectorToMat(1, myvector.size(), myvector);
