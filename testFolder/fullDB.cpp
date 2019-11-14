@@ -130,7 +130,7 @@ int main()
     cout << "the size gender is " << generos.size() << endl;
     cout << "the size id is " << id.size() << endl;
 
-    // db->insertMany(nombres, apellidos, id, edades, generos, vectors);
+    db->insertMany(nombres, apellidos, id, edades, generos, vectors);
     cout << "listo" << endl;
     cout << "YEAH! YOUR DB IS NOW FILLED WITH 100,000, GOOD LUCK..." << endl;
 }

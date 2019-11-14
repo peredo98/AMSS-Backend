@@ -235,7 +235,7 @@ Mat FaceDB::getMatById(string id)
     // return myMat;
 }
 
-string FaceDB::getNameByBiometricData(vector<float> myvector) // Creo que ya no deberia de servir
+string FaceDB::getNameByBiometricData(vector<float> myvector) // This is not useful
 {
 
     Mat mymat = vectorToMat(1, myvector.size(), myvector);
@@ -303,12 +303,17 @@ string FaceDB::getNameById(string id)
         d.Parse(bsoncxx::to_json(*maybe_result).c_str());
         Value &val = d["name"];
         return val.GetString();
+        // string a = val.GetString();
+        // *name = a;
+        // return 0;
     }
     return "NULL";
+    // *name = "NULL";
+    // return 1;
 }
 
 //to insert person in DB without photo
-void FaceDB::createPerson(string name, string lastName, string id, int age, string gender)
+void FaceDB::createPerson(string name, string lastName, string id, int age, string gender) //This is not useful
 {
     if (validateData->validate_all(name, lastName, id, gender))
     {
@@ -320,7 +325,7 @@ void FaceDB::createPerson(string name, string lastName, string id, int age, stri
 }
 
 //to insert person in DB with photo
-void FaceDB::createPerson(string name, string lastName, string id, int age, string gender, string imageURL)
+void FaceDB::createPerson(string name, string lastName, string id, int age, string gender, string imageURL) //This is not useful
 {
     if (validateData->validate_all(name, lastName, id, gender))
     {
@@ -343,6 +348,18 @@ void FaceDB::createPerson(string name, string lastName, string id, int age, stri
     }
 }
 
+//to insert person in DB with photo and biometrics
+void FaceDB::createPerson(string name, string lastName, string id, int age, string gender, string imageURL, Mat mymat)
+{
+    if (validateData->validate_all(name, lastName, id, gender))
+    {
+        string biometrics = matToString(mymat);
+        document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "imageUrl" << imageURL << "biometricData" << biometrics;
+        collection.insert_one(document.view());
+        increment(mymat);
+    }
+}
+
 void FaceDB::insertMany(vector<string> name, vector<string> lastName, vector<string> id, vector<int> age, vector<string> gender, Mat auxMat)
 {
     std::vector<bsoncxx::document::value> documents;
@@ -355,28 +372,6 @@ void FaceDB::insertMany(vector<string> name, vector<string> lastName, vector<str
             bsoncxx::builder::stream::document{} << "name" << name[i] << "lastName" << lastName[i] << "studentId" << id[i] << "age" << age[i] << "gender" << gender[i] << "biometricData" << matStr << finalize);
     }
     collection.insert_many(documents);
-    cout << "Inserte 100,000 " << endl;
-}
-
-//to insert person in DB with photo and biometrics
-void FaceDB::createPerson(string name, string lastName, string id, int age, string gender, string imageURL, Mat mymat)
-{
-    if (validateData->validate_all(name, lastName, id, gender))
-    {
-        document << "name" << name << "lastName" << lastName << "studentId" << id << "age" << age << "gender" << gender << "imageUrl" << imageURL;
-
-        vector<float> biometrics = matToVector(mymat);
-        auto array = document << "biometricData " << bsoncxx::builder::stream::open_array;
-
-        for (int i = 0; i < biometrics.size(); i++)
-        {
-            array << biometrics[i];
-        }
-        array << bsoncxx::builder::stream::close_array;
-
-        collection.insert_one(document.view());
-        increment(mymat);
-    }
 }
 
 void FaceDB::deletePersonById(string id)
