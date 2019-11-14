@@ -466,8 +466,11 @@ string FaceDB::matToString(Mat mymat)
     {
         // cout << "i: " << i << ": " << mymat(0, i) << endl;
         // cout << "i: " << i << ": " << mymat.at<float>(0, i) << endl;
+        
         float element = mymat.at<float>(0, i);
-        auxStr = auxStr + to_string(element) + " ";
+        std::ostringstream os;
+        os << element;
+        auxStr = auxStr + os.str() + " ";
     }
     return auxStr;
 }
