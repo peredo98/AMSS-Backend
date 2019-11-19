@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o"
-  "CMakeFiles/fr.dir/test.cpp.o"
+  "CMakeFiles/fr.dir/main.cpp.o"
   "fr"
   "fr.pdb"
 )

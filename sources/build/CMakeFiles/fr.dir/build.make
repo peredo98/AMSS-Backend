@@ -34,10 +34,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.15.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.15.5/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.15.3/bin/cmake -E remove -f
+RM = /usr/local/Cellar/cmake/3.15.5/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -57,93 +57,79 @@ include CMakeFiles/fr.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/fr.dir/flags.make
 
-CMakeFiles/fr.dir/test.cpp.o: CMakeFiles/fr.dir/flags.make
-CMakeFiles/fr.dir/test.cpp.o: ../test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/fr.dir/test.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fr.dir/test.cpp.o -c /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/test.cpp
+CMakeFiles/fr.dir/main.cpp.o: CMakeFiles/fr.dir/flags.make
+CMakeFiles/fr.dir/main.cpp.o: ../main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/fr.dir/main.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fr.dir/main.cpp.o -c /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/main.cpp
 
-CMakeFiles/fr.dir/test.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fr.dir/test.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/test.cpp > CMakeFiles/fr.dir/test.cpp.i
+CMakeFiles/fr.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fr.dir/main.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/main.cpp > CMakeFiles/fr.dir/main.cpp.i
 
-CMakeFiles/fr.dir/test.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fr.dir/test.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/test.cpp -o CMakeFiles/fr.dir/test.cpp.s
-
-CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o: CMakeFiles/fr.dir/flags.make
-CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o: /Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o -c /Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp
-
-CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp > CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i
-
-CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp -o CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s
+CMakeFiles/fr.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fr.dir/main.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/main.cpp -o CMakeFiles/fr.dir/main.cpp.s
 
 # Object files for target fr
 fr_OBJECTS = \
-"CMakeFiles/fr.dir/test.cpp.o" \
-"CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o"
+"CMakeFiles/fr.dir/main.cpp.o"
 
 # External object files for target fr
 fr_EXTERNAL_OBJECTS =
 
-fr: CMakeFiles/fr.dir/test.cpp.o
-fr: CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o
+fr: CMakeFiles/fr.dir/main.cpp.o
 fr: CMakeFiles/fr.dir/build.make
-fr: /usr/local/lib/libopencv_gapi.4.1.1.dylib
-fr: /usr/local/lib/libopencv_stitching.4.1.1.dylib
-fr: /usr/local/lib/libopencv_aruco.4.1.1.dylib
-fr: /usr/local/lib/libopencv_bgsegm.4.1.1.dylib
-fr: /usr/local/lib/libopencv_bioinspired.4.1.1.dylib
-fr: /usr/local/lib/libopencv_ccalib.4.1.1.dylib
-fr: /usr/local/lib/libopencv_dnn_objdetect.4.1.1.dylib
-fr: /usr/local/lib/libopencv_dpm.4.1.1.dylib
-fr: /usr/local/lib/libopencv_face.4.1.1.dylib
-fr: /usr/local/lib/libopencv_freetype.4.1.1.dylib
-fr: /usr/local/lib/libopencv_fuzzy.4.1.1.dylib
-fr: /usr/local/lib/libopencv_hfs.4.1.1.dylib
-fr: /usr/local/lib/libopencv_img_hash.4.1.1.dylib
-fr: /usr/local/lib/libopencv_line_descriptor.4.1.1.dylib
-fr: /usr/local/lib/libopencv_quality.4.1.1.dylib
-fr: /usr/local/lib/libopencv_reg.4.1.1.dylib
-fr: /usr/local/lib/libopencv_rgbd.4.1.1.dylib
-fr: /usr/local/lib/libopencv_saliency.4.1.1.dylib
-fr: /usr/local/lib/libopencv_sfm.4.1.1.dylib
-fr: /usr/local/lib/libopencv_stereo.4.1.1.dylib
-fr: /usr/local/lib/libopencv_structured_light.4.1.1.dylib
-fr: /usr/local/lib/libopencv_superres.4.1.1.dylib
-fr: /usr/local/lib/libopencv_surface_matching.4.1.1.dylib
-fr: /usr/local/lib/libopencv_tracking.4.1.1.dylib
-fr: /usr/local/lib/libopencv_videostab.4.1.1.dylib
-fr: /usr/local/lib/libopencv_xfeatures2d.4.1.1.dylib
-fr: /usr/local/lib/libopencv_xobjdetect.4.1.1.dylib
-fr: /usr/local/lib/libopencv_xphoto.4.1.1.dylib
-fr: /usr/local/lib/libopencv_shape.4.1.1.dylib
-fr: /usr/local/lib/libopencv_datasets.4.1.1.dylib
-fr: /usr/local/lib/libopencv_plot.4.1.1.dylib
-fr: /usr/local/lib/libopencv_text.4.1.1.dylib
-fr: /usr/local/lib/libopencv_dnn.4.1.1.dylib
-fr: /usr/local/lib/libopencv_highgui.4.1.1.dylib
-fr: /usr/local/lib/libopencv_ml.4.1.1.dylib
-fr: /usr/local/lib/libopencv_phase_unwrapping.4.1.1.dylib
-fr: /usr/local/lib/libopencv_optflow.4.1.1.dylib
-fr: /usr/local/lib/libopencv_ximgproc.4.1.1.dylib
-fr: /usr/local/lib/libopencv_video.4.1.1.dylib
-fr: /usr/local/lib/libopencv_videoio.4.1.1.dylib
-fr: /usr/local/lib/libopencv_imgcodecs.4.1.1.dylib
-fr: /usr/local/lib/libopencv_objdetect.4.1.1.dylib
-fr: /usr/local/lib/libopencv_calib3d.4.1.1.dylib
-fr: /usr/local/lib/libopencv_features2d.4.1.1.dylib
-fr: /usr/local/lib/libopencv_flann.4.1.1.dylib
-fr: /usr/local/lib/libopencv_photo.4.1.1.dylib
-fr: /usr/local/lib/libopencv_imgproc.4.1.1.dylib
-fr: /usr/local/lib/libopencv_core.4.1.1.dylib
+fr: /usr/local/lib/libopencv_gapi.4.1.2.dylib
+fr: /usr/local/lib/libopencv_stitching.4.1.2.dylib
+fr: /usr/local/lib/libopencv_aruco.4.1.2.dylib
+fr: /usr/local/lib/libopencv_bgsegm.4.1.2.dylib
+fr: /usr/local/lib/libopencv_bioinspired.4.1.2.dylib
+fr: /usr/local/lib/libopencv_ccalib.4.1.2.dylib
+fr: /usr/local/lib/libopencv_dnn_objdetect.4.1.2.dylib
+fr: /usr/local/lib/libopencv_dnn_superres.4.1.2.dylib
+fr: /usr/local/lib/libopencv_dpm.4.1.2.dylib
+fr: /usr/local/lib/libopencv_face.4.1.2.dylib
+fr: /usr/local/lib/libopencv_freetype.4.1.2.dylib
+fr: /usr/local/lib/libopencv_fuzzy.4.1.2.dylib
+fr: /usr/local/lib/libopencv_hfs.4.1.2.dylib
+fr: /usr/local/lib/libopencv_img_hash.4.1.2.dylib
+fr: /usr/local/lib/libopencv_line_descriptor.4.1.2.dylib
+fr: /usr/local/lib/libopencv_quality.4.1.2.dylib
+fr: /usr/local/lib/libopencv_reg.4.1.2.dylib
+fr: /usr/local/lib/libopencv_rgbd.4.1.2.dylib
+fr: /usr/local/lib/libopencv_saliency.4.1.2.dylib
+fr: /usr/local/lib/libopencv_sfm.4.1.2.dylib
+fr: /usr/local/lib/libopencv_stereo.4.1.2.dylib
+fr: /usr/local/lib/libopencv_structured_light.4.1.2.dylib
+fr: /usr/local/lib/libopencv_superres.4.1.2.dylib
+fr: /usr/local/lib/libopencv_surface_matching.4.1.2.dylib
+fr: /usr/local/lib/libopencv_tracking.4.1.2.dylib
+fr: /usr/local/lib/libopencv_videostab.4.1.2.dylib
+fr: /usr/local/lib/libopencv_xfeatures2d.4.1.2.dylib
+fr: /usr/local/lib/libopencv_xobjdetect.4.1.2.dylib
+fr: /usr/local/lib/libopencv_xphoto.4.1.2.dylib
+fr: /usr/local/lib/libopencv_highgui.4.1.2.dylib
+fr: /usr/local/lib/libopencv_shape.4.1.2.dylib
+fr: /usr/local/lib/libopencv_datasets.4.1.2.dylib
+fr: /usr/local/lib/libopencv_plot.4.1.2.dylib
+fr: /usr/local/lib/libopencv_text.4.1.2.dylib
+fr: /usr/local/lib/libopencv_dnn.4.1.2.dylib
+fr: /usr/local/lib/libopencv_ml.4.1.2.dylib
+fr: /usr/local/lib/libopencv_phase_unwrapping.4.1.2.dylib
+fr: /usr/local/lib/libopencv_optflow.4.1.2.dylib
+fr: /usr/local/lib/libopencv_ximgproc.4.1.2.dylib
+fr: /usr/local/lib/libopencv_video.4.1.2.dylib
+fr: /usr/local/lib/libopencv_videoio.4.1.2.dylib
+fr: /usr/local/lib/libopencv_imgcodecs.4.1.2.dylib
+fr: /usr/local/lib/libopencv_objdetect.4.1.2.dylib
+fr: /usr/local/lib/libopencv_calib3d.4.1.2.dylib
+fr: /usr/local/lib/libopencv_features2d.4.1.2.dylib
+fr: /usr/local/lib/libopencv_flann.4.1.2.dylib
+fr: /usr/local/lib/libopencv_photo.4.1.2.dylib
+fr: /usr/local/lib/libopencv_imgproc.4.1.2.dylib
+fr: /usr/local/lib/libopencv_core.4.1.2.dylib
 fr: CMakeFiles/fr.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable fr"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable fr"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fr.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

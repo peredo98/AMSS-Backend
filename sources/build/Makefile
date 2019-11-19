@@ -39,10 +39,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.15.3/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.15.5/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.15.3/bin/cmake -E remove -f
+RM = /usr/local/Cellar/cmake/3.15.5/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -59,7 +59,7 @@ CMAKE_BINARY_DIR = /Users/intern/Documents/TEC/AMSS/AMSS-Backend/sources/build
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/Cellar/cmake/3.15.3/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/Cellar/cmake/3.15.5/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -123,59 +123,32 @@ fr/fast:
 	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/build
 .PHONY : fr/fast
 
-Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.o: Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o
+main.o: main.cpp.o
 
-.PHONY : Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.o
-
-# target to build an object file
-Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o:
-	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o
-.PHONY : Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.o
-
-Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.i: Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i
-
-.PHONY : Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.i
-
-# target to preprocess a source file
-Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i:
-	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i
-.PHONY : Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.i
-
-Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.s: Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s
-
-.PHONY : Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.s
-
-# target to generate assembly for a file
-Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s:
-	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s
-.PHONY : Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.cpp.s
-
-test.o: test.cpp.o
-
-.PHONY : test.o
+.PHONY : main.o
 
 # target to build an object file
-test.cpp.o:
-	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/test.cpp.o
-.PHONY : test.cpp.o
+main.cpp.o:
+	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-test.i: test.cpp.i
+main.i: main.cpp.i
 
-.PHONY : test.i
+.PHONY : main.i
 
 # target to preprocess a source file
-test.cpp.i:
-	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/test.cpp.i
-.PHONY : test.cpp.i
+main.cpp.i:
+	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-test.s: test.cpp.s
+main.s: main.cpp.s
 
-.PHONY : test.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-test.cpp.s:
-	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/test.cpp.s
-.PHONY : test.cpp.s
+main.cpp.s:
+	$(MAKE) -f CMakeFiles/fr.dir/build.make CMakeFiles/fr.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 # Help Target
 help:
@@ -186,12 +159,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... fr"
-	@echo "... Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.o"
-	@echo "... Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.i"
-	@echo "... Users/intern/Documents/TEC/AMSS/AMSS-Backend/headers/IndexSearch.s"
-	@echo "... test.o"
-	@echo "... test.i"
-	@echo "... test.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 .PHONY : help
 
 

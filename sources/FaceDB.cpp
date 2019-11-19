@@ -22,21 +22,29 @@ void FaceDB::updateIndex()
     flannSearch->updateIndex(dataMatset);
 }
 
-Mat FaceDB::searchPerson(cv::Mat_<float> query, int numKnn)
+int FaceDB::searchPerson(cv::Mat_<float> query, int numKnn, vector<Mat> &topMatches, vector<string> &topNames, vector<string> &topMatchesId)
 {
     vector<Mat> in_dis = flannSearch->searchPerson(query, numKnn);
 
     Mat indices = in_dis[0];
     Mat dist = in_dis[1];
-    Mat nearestNeighbors;
 
     for (int i = 0; i < numKnn; i++)
     {
-        Mat neigh = dataMatset.row(indices.at<int>(0, i));
-        // cout << neigh << endl;
-        nearestNeighbors.push_back(neigh);
+        Mat theMat = dataMatset.row(indices.at<int>(0, i));
+
+        string theName;
+        getNameByBiometricData(theMat, theName);
+
+        string theID;
+        getIdByBioData(theMat, theID);
+
+        topMatches.push_back(theMat);
+        topNames.push_back(theName);
+        topMatchesId.push_back(theID);
     }
-    return nearestNeighbors;
+    return 0;
+    // return nearestNeighbors;
 }
 
 void FaceDB::makeDataSet()
@@ -188,12 +196,12 @@ void FaceDB::makeRange(Mat indexMat)
     updateIndex();
 }
 
-Mat FaceDB::getMatById(string id)
+int FaceDB::getMatById(string id, Mat &mymat)
 {
     bsoncxx::builder::stream::document filter;
 
     filter << "studentId" << id;
-    Mat mymat;
+    // Mat mymat;
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
         collection.find_one(filter.view());
     if (maybe_result)
@@ -202,8 +210,9 @@ Mat FaceDB::getMatById(string id)
         Value &val = d["biometricData"];
         string matStr = val.GetString();
         mymat = stringToMat(matStr);
+        return 0; // MAT FOUND
     }
-    return mymat;
+    return 1; //MAT NOT FOUND
 
     // bsoncxx::builder::stream::document filter;
     // filter << "studentId" << id;
@@ -235,7 +244,7 @@ Mat FaceDB::getMatById(string id)
     // return myMat;
 }
 
-string FaceDB::getNameByBiometricData(vector<float> myvector) // This is not useful
+int FaceDB::getNameByBiometricData(vector<float> myvector, string &name) // This is not useful
 {
 
     Mat mymat = vectorToMat(1, myvector.size(), myvector);
@@ -250,7 +259,7 @@ string FaceDB::getNameByBiometricData(vector<float> myvector) // This is not use
     // }
     // array << bsoncxx::builder::stream::close_array;
 
-    auto array = filter << "biometricData " << matStr;
+    auto array = filter << "biometricData" << matStr;
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
         collection.find_one(filter.view());
     if (maybe_result)
@@ -258,13 +267,13 @@ string FaceDB::getNameByBiometricData(vector<float> myvector) // This is not use
 
         d.Parse(bsoncxx::to_json(*maybe_result).c_str());
         Value &val = d["name"];
-        string name = val.GetString();
-        return name;
+        name = val.GetString();
+        return 0;
     }
-    return "NULL";
+    return 1;
 }
 
-string FaceDB::getNameByBiometricData(Mat matSearch)
+int FaceDB::getNameByBiometricData(Mat matSearch, string &name)
 {
 
     bsoncxx::builder::stream::document filter;
@@ -276,21 +285,38 @@ string FaceDB::getNameByBiometricData(Mat matSearch)
     // }
     // array << bsoncxx::builder::stream::close_array;
     string matStr = matToString(matSearch);
-    auto array = filter << "biometricData " << matStr;
+    auto array = filter << "biometricData" << matStr;
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
         collection.find_one(filter.view());
     if (maybe_result)
     {
         d.Parse(bsoncxx::to_json(*maybe_result).c_str());
         Value &val = d["name"];
-        string name = val.GetString();
-        return name;
+        name = val.GetString();
+        return 0;
     }
-    return "NULL";
+    return 1;
+}
+
+int FaceDB::getIdByBioData(cv::Mat mymat, string &id)
+{
+    bsoncxx::builder::stream::document filter;
+    string matStr = matToString(mymat);
+    auto array = filter << "biometricData" << matStr;
+    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+        collection.find_one(filter.view());
+    if (maybe_result)
+    {
+        d.Parse(bsoncxx::to_json(*maybe_result).c_str());
+        Value &val = d["studentId"];
+        id = val.GetString();
+        return 0;
+    }
+    return 1;
 }
 
 // to retrieve person from DB
-string FaceDB::getNameById(string id)
+int FaceDB::getNameById(string id, string &name)
 {
     bsoncxx::builder::stream::document filter;
 
@@ -302,14 +328,15 @@ string FaceDB::getNameById(string id)
     {
         d.Parse(bsoncxx::to_json(*maybe_result).c_str());
         Value &val = d["name"];
-        return val.GetString();
-        // string a = val.GetString();
-        // *name = a;
-        // return 0;
+        // name = "HOla mundo";
+        name = val.GetString();
+
+        // return val.GetString();
+        return 0;
     }
-    return "NULL";
-    // *name = "NULL";
-    // return 1;
+    name = "NULL";
+
+    return 1;
 }
 
 //to insert person in DB without photo
@@ -377,9 +404,12 @@ void FaceDB::insertMany(vector<string> name, vector<string> lastName, vector<str
 void FaceDB::deletePersonById(string id)
 {
 
-    Mat deletedMat = getMatById(id);
+    Mat deletedMat;
+    int result = getMatById(id, deletedMat);
+
     cout << "the deleted Mat is: " << deletedMat << endl;
-    if (deletedMat.rows != 0)
+
+    if (result == 0)
     {
         makeRange(deletedMat);
         bsoncxx::builder::stream::document filter;
@@ -466,7 +496,7 @@ string FaceDB::matToString(Mat mymat)
     {
         // cout << "i: " << i << ": " << mymat(0, i) << endl;
         // cout << "i: " << i << ": " << mymat.at<float>(0, i) << endl;
-        
+
         float element = mymat.at<float>(0, i);
         std::ostringstream os;
         os << element;

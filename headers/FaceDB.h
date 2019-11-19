@@ -44,7 +44,7 @@ public:
 
     void updateIndex();
 
-    cv::Mat searchPerson(cv::Mat_<float> query, int numKnn);
+    int searchPerson(cv::Mat_<float> query, int numKnn, vector<cv::Mat> &topMatches, vector<string> &topNames, vector<string> &topMatchesId);
 
     void makeDataSet();
 
@@ -54,14 +54,15 @@ public:
 
     void makeRange(cv::Mat indexMat);
 
-    cv::Mat getMatById(string id);
+    int getMatById(string id, Mat &mymat);
 
-    string getNameByBiometricData(vector<float> myvector);
+    int getNameByBiometricData(vector<float> myvector, string &name);
 
-    string getNameByBiometricData(cv::Mat matSearch);
+    int getNameByBiometricData(cv::Mat matSearch, string &name);
 
-    // to retrieve person from DB
-    string getNameById(string id);
+    int getIdByBioData(cv::Mat mymat, string &id);
+
+    int getNameById(string id, string &name);
 
     //to insert person in DB without photo
     void createPerson(string name, string lastName, string id, int age, string gender);

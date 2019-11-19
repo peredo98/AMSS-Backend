@@ -6,5 +6,5 @@ CXX_FLAGS =  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacO
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/local/Cellar/mongo-cxx-driver/3.4.0/include/mongocxx/v_noabi -I/usr/local/Cellar/mongo-cxx-driver/3.4.0/include/bsoncxx/v_noabi -isystem /usr/local/Cellar/opencv/4.1.1_2/include/opencv4 
+CXX_INCLUDES = -I/usr/local/Cellar/mongo-cxx-driver/3.4.0/include/mongocxx/v_noabi -I/usr/local/Cellar/mongo-cxx-driver/3.4.0/include/bsoncxx/v_noabi -isystem /usr/local/Cellar/opencv/4.1.2/include/opencv4 
 
