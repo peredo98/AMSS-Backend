@@ -104,9 +104,11 @@ To fill your local database you need to do the following steps:
 
 1. Download the Vectors.txt from <https://drive.google.com/file/d/1PvNtaSKuFYAo1ZC5dKNNMdLr9eAO0UcT/view> and put it in the `testFolder` folder.
 
-2. Compile and run the `fullDB.cpp` file inside the same folder than above. It will take a minute, don't worry.
+2. Download the img.zip from <https://drive.google.com/file/d/10F4mnU_HPeGz0eHNRK2P--IOxsznSMSY/view?usp=sharing> and put it
 
-Now, you should have stored 100,000 people with name, lastname, age, id, gender, a descriptor vector and its image.
+3. Compile and run the `fullDB.cpp` file inside the same folder than above. It will take a minute, don't worry.
+
+Now, you should have stored 100,000 people with name, lastname, age, id, gender and descriptor vector and its image.
 
 This must to be done **ONLY ONCE**, so you can forget about this once you're done.
 
@@ -160,6 +162,20 @@ The `main.cpp` file is the main file.
 
 ```
 db->deletePersonById("A01234567");
+```
+
+> Delete all the database
+
+```
+db->deleteAll();
+```
+
+> Get the image of a person related to its id
+
+```
+Mat img;
+result = db->getImgById("A01114317", img);
+// The variable img has already the img due to its passed by reference.
 ```
 
 > Get a person's name related to its description vector on Mat formatvector<float> format

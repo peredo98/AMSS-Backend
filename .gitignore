@@ -37,3 +37,6 @@ Vectores.txt
 metodologiaImg.cpp
 utils.cpp
 img/img.zip
+img/img
+img/*.png
+img.zip

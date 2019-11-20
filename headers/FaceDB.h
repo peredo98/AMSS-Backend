@@ -44,7 +44,7 @@ public:
 
     void updateIndex();
 
-    int searchPerson(cv::Mat_<float> query, int numKnn, vector<cv::Mat> &topMatches, vector<string> &topNames, vector<string> &topMatchesId);
+    int searchPerson(cv::Mat_<float> query, int numKnn, std::vector<cv::Mat> &topMatches, std::vector<std::string> &topNames, std::vector<std::string> &topMatchesId);
 
     void makeDataSet();
 
@@ -54,49 +54,51 @@ public:
 
     void makeRange(cv::Mat indexMat);
 
-    int getMatById(string id, Mat &mymat);
+    int getMatById(std::string id, cv::Mat &mymat);
 
-    int getNameByBiometricData(vector<float> myvector, string &name);
+    int getNameByBiometricData(std::vector<float> myvector, std::string &name);
 
-    int getNameByBiometricData(cv::Mat matSearch, string &name);
+    int getNameByBiometricData(cv::Mat matSearch, std::string &name);
 
-    int getIdByBioData(cv::Mat mymat, string &id);
+    int getIdByBioData(cv::Mat mymat, std::string &id);
 
-    int getNameById(string id, string &name);
+    int getNameById(std::string id, std::string &name);
+
+    int getImgById(std::string id, Mat &img);
 
     //to insert person in DB without photo
-    void createPerson(string name, string lastName, string id, int age, string gender);
+    void createPerson(std::string name, std::string lastName, std::string id, int age, std::string gender);
 
     //to insert person in DB with photo
-    void createPerson(string name, string lastName, string id, int age, string gender, string imageURL);
+    void createPerson(std::string name, std::string lastName, std::string id, int age, std::string gender, std::string imageURL);
 
     //to insert person in DB with biometrics
-    void createPerson(string name, string lastName, string id, int age, string gender, cv::Mat mymat);
+    void createPerson(std::string name, std::string lastName, std::string id, int age, std::string gender, cv::Mat mymat);
 
-    void insertMany(vector<string> name, vector<string> lastName, vector<string> id, vector<int> age, vector<string> gender, Mat auxMat);
+    void insertMany(std::vector<std::string> name, std::vector<std::string> lastName, std::vector<std::string> id, std::vector<int> age, std::vector<std::string> gender, cv::Mat auxMat);
 
     //to insert person in DB with photo and biometrics
-    void createPerson(string name, string lastName, string id, int age, string gender, string imageURL, cv::Mat mymat);
+    void createPerson(std::string name, std::string lastName, std::string id, int age, std::string gender, std::string imageURL, cv::Mat mymat);
 
-    void deletePersonById(string id);
+    void deletePersonById(std::string id);
 
     void deleteAll();
 
-    void saveImage(cv::Mat image, string fileName);
+    void saveImage(cv::Mat image, std::string fileName);
 
     //write image url into existing user
-    void insertImage(string id, string fileName);
+    void insertImage(std::string id, std::string fileName);
 
     //insert matrix with biometric data into existing user
-    void insertBiometric(string id, cv::Mat mymat);
+    void insertBiometric(std::string id, cv::Mat mymat);
 
-    vector<float> matToVector(cv::Mat mymat);
+    std::vector<float> matToVector(cv::Mat mymat);
 
-    cv::Mat vectorToMat(long rows, long col, vector<float> vtest);
+    cv::Mat vectorToMat(long rows, long col, std::vector<float> vtest);
 
-    string matToString(cv::Mat mymat);
+    std::string matToString(cv::Mat mymat);
 
-    cv::Mat stringToMat(string matStr);
+    cv::Mat stringToMat(std::string matStr);
 
     //Print all documents in DB
     void printDB();

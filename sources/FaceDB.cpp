@@ -339,6 +339,31 @@ int FaceDB::getNameById(string id, string &name)
     return 1;
 }
 
+// get the img of a person
+int FaceDB::getImgById(string id, Mat &img)
+{
+    bsoncxx::builder::stream::document filter;
+
+    filter << "studentId" << id;
+
+    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+        collection.find_one(filter.view());
+
+    if (maybe_result)
+    {
+        d.Parse(bsoncxx::to_json(*maybe_result).c_str());
+
+        Value &val = d["imageUrl"];
+
+        string path = val.GetString();
+
+        img = cv::imread(path);
+
+        return 0;
+    }
+    return 1;
+}
+
 //to insert person in DB without photo
 void FaceDB::createPerson(string name, string lastName, string id, int age, string gender) //This is not useful
 {
@@ -395,9 +420,11 @@ void FaceDB::insertMany(vector<string> name, vector<string> lastName, vector<str
     {
         string matStr = "";
         matStr = matToString(auxMat.row(i));
+        string imageURL = "./../img/" + id[i] + ".png";
         documents.push_back(
-            bsoncxx::builder::stream::document{} << "name" << name[i] << "lastName" << lastName[i] << "studentId" << id[i] << "age" << age[i] << "gender" << gender[i] << "biometricData" << matStr << finalize);
+            bsoncxx::builder::stream::document{} << "name" << name[i] << "lastName" << lastName[i] << "studentId" << id[i] << "age" << age[i] << "gender" << gender[i] << "imageUrl" << imageURL << "biometricData" << matStr << finalize);
     }
+
     collection.insert_many(documents);
 }
 
@@ -430,6 +457,7 @@ void FaceDB::deleteAll()
 
 void FaceDB::saveImage(Mat image, string fileName)
 {
+
     imwrite("./../img/" + fileName + ".png", image);
 }
 
