@@ -420,7 +420,7 @@ void FaceDB::insertMany(vector<string> name, vector<string> lastName, vector<str
     {
         string matStr = "";
         matStr = matToString(auxMat.row(i));
-        string imageURL = "./../img/" + id[i] + ".png";
+        string imageURL = "./../../FaceDB/img/" + id[i] + ".png";
         documents.push_back(
             bsoncxx::builder::stream::document{} << "name" << name[i] << "lastName" << lastName[i] << "studentId" << id[i] << "age" << age[i] << "gender" << gender[i] << "imageUrl" << imageURL << "biometricData" << matStr << finalize);
     }

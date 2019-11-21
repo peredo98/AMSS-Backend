@@ -96,5 +96,5 @@ int main(int, char **)
      // std::cout << "finished computation at " << std::ctime(&end_time)
      //           << "elapsed time: " << elapsed_seconds.count() << "s\n";
 
-     // db->printDB();
+     db->printDB();
 }
